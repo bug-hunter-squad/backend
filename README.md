@@ -5,5 +5,5 @@ Untuk bug hunter squad divisi backend
 ### Rules `commit`
 >Gunakan kata `ADD` kalau menambah fitur atau buat progress baru <br/>
 >Gunakan kata `FIX` ketika push suatu fixing error  <br/>
->Gunakan kata tambahan `minor` ketika commit sedikt perubahan `FIX minor error auth`
->alternatif `gunakan bahasa yang mudah di pahami rekan tim`
+>Gunakan kata tambahan `minor` ketika commit sedikt perubahan `FIX minor error auth` <br/>
+>Dan alternatif `gunakan bahasa yang mudah di pahami rekan tim`
