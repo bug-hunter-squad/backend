@@ -5,28 +5,20 @@ const express = require('express');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const { errorHandler } = require('./app/middlewares/errorHandler');
-const { ErrorResponse } = require('./utils/errorResponse');
 
 // CONFIG
 const app = express();
 const port = process.env.PORT || process.env.LOCAL_PORT;
 
 // MIDDLEWARES USAGE
-app.use(helmet({ extends: false }));
+app.use(helmet());
 app.use(bodyParser.json());
 
-// CONTROLLER DECLARATION
-/* Controller */
+// ROUTES DECLARATION
+const authRoutes = require('./routes/authRoutes');
 
 // PUBLIC ROUTES
-app.get('/', (req, res) => {
-  const firstNumber = 1;
-  const secondNumber = 9;
-  const counter = firstNumber + secondNumber;
-
-  if ((counter % 2) !== 0) throw new ErrorResponse('Bukan bilangan genap!');
-  res.status(200).send({ message: 'Bilangan genap!' });
-});
+app.use('/auth', authRoutes);
 
 // PRIVATE ROUTES
 /* Routes list */
