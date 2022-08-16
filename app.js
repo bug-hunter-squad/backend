@@ -16,9 +16,11 @@ app.use(bodyParser.json());
 
 // ROUTES DECLARATION
 const authRoutes = require('./routes/authRoutes');
+const profileRoutes = require('./routes/profileRoutes');
 
 // PUBLIC ROUTES
 app.use('/auth', authRoutes);
+app.use('/profile', profileRoutes);
 
 // PRIVATE ROUTES
 /* Routes list */
