@@ -111,6 +111,20 @@ ALTER SEQUENCE public.airlines_id_seq OWNED BY public.airlines.id;
 
 
 --
+-- Name: booking_tickets; Type: TABLE; Schema: public; Owner: nocturndev
+--
+
+CREATE TABLE public.booking_tickets (
+    id integer NOT NULL,
+    booking_id integer NOT NULL,
+    passenger_name character varying,
+    nationality character varying
+);
+
+
+ALTER TABLE public.booking_tickets OWNER TO nocturndev;
+
+--
 -- Name: bookings; Type: TABLE; Schema: public; Owner: nocturndev
 --
 
@@ -119,9 +133,9 @@ CREATE TABLE public.bookings (
     user_id integer NOT NULL,
     flight_id integer NOT NULL,
     booking_status public.booking_status NOT NULL,
-    booking_date date,
-    total_child_passanger integer,
-    total_adult_passanger integer,
+    booking_date timestamp with time zone,
+    total_child_passenger integer,
+    total_adult_passenger integer,
     flight_class public.flight_class NOT NULL,
     total_price integer,
     rating integer
@@ -165,11 +179,12 @@ CREATE TABLE public.flights (
     price integer,
     total_child_ticket integer,
     total_adult_ticket integer,
-    departure_time date,
-    arrival_time date,
+    departure_time timestamp with time zone,
+    arrival_time timestamp with time zone,
     wifi boolean NOT NULL,
     meal boolean NOT NULL,
-    luggage boolean NOT NULL
+    luggage boolean NOT NULL,
+    terminal character varying
 );
 
 
@@ -198,20 +213,6 @@ ALTER SEQUENCE public.flights_id_seq OWNED BY public.flights.id;
 
 
 --
--- Name: tickets; Type: TABLE; Schema: public; Owner: nocturndev
---
-
-CREATE TABLE public.tickets (
-    id integer NOT NULL,
-    booking_id integer NOT NULL,
-    passenger_name character varying,
-    nationality character varying
-);
-
-
-ALTER TABLE public.tickets OWNER TO nocturndev;
-
---
 -- Name: tickets_id_seq; Type: SEQUENCE; Schema: public; Owner: nocturndev
 --
 
@@ -230,7 +231,7 @@ ALTER TABLE public.tickets_id_seq OWNER TO nocturndev;
 -- Name: tickets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: nocturndev
 --
 
-ALTER SEQUENCE public.tickets_id_seq OWNED BY public.tickets.id;
+ALTER SEQUENCE public.tickets_id_seq OWNED BY public.booking_tickets.id;
 
 
 --
@@ -295,6 +296,13 @@ ALTER TABLE ONLY public.airlines ALTER COLUMN id SET DEFAULT nextval('public.air
 
 
 --
+-- Name: booking_tickets id; Type: DEFAULT; Schema: public; Owner: nocturndev
+--
+
+ALTER TABLE ONLY public.booking_tickets ALTER COLUMN id SET DEFAULT nextval('public.tickets_id_seq'::regclass);
+
+
+--
 -- Name: bookings id; Type: DEFAULT; Schema: public; Owner: nocturndev
 --
 
@@ -306,13 +314,6 @@ ALTER TABLE ONLY public.bookings ALTER COLUMN id SET DEFAULT nextval('public.boo
 --
 
 ALTER TABLE ONLY public.flights ALTER COLUMN id SET DEFAULT nextval('public.flights_id_seq'::regclass);
-
-
---
--- Name: tickets id; Type: DEFAULT; Schema: public; Owner: nocturndev
---
-
-ALTER TABLE ONLY public.tickets ALTER COLUMN id SET DEFAULT nextval('public.tickets_id_seq'::regclass);
 
 
 --
@@ -331,10 +332,18 @@ COPY public.airlines (id, airline_name, airline_logo, airline_pic, airline_pic_p
 
 
 --
+-- Data for Name: booking_tickets; Type: TABLE DATA; Schema: public; Owner: nocturndev
+--
+
+COPY public.booking_tickets (id, booking_id, passenger_name, nationality) FROM stdin;
+\.
+
+
+--
 -- Data for Name: bookings; Type: TABLE DATA; Schema: public; Owner: nocturndev
 --
 
-COPY public.bookings (id, user_id, flight_id, booking_status, booking_date, total_child_passanger, total_adult_passanger, flight_class, total_price, rating) FROM stdin;
+COPY public.bookings (id, user_id, flight_id, booking_status, booking_date, total_child_passenger, total_adult_passenger, flight_class, total_price, rating) FROM stdin;
 \.
 
 
@@ -342,15 +351,7 @@ COPY public.bookings (id, user_id, flight_id, booking_status, booking_date, tota
 -- Data for Name: flights; Type: TABLE DATA; Schema: public; Owner: nocturndev
 --
 
-COPY public.flights (id, airline_id, original, destination, gate, price, total_child_ticket, total_adult_ticket, departure_time, arrival_time, wifi, meal, luggage) FROM stdin;
-\.
-
-
---
--- Data for Name: tickets; Type: TABLE DATA; Schema: public; Owner: nocturndev
---
-
-COPY public.tickets (id, booking_id, passenger_name, nationality) FROM stdin;
+COPY public.flights (id, airline_id, original, destination, gate, price, total_child_ticket, total_adult_ticket, departure_time, arrival_time, wifi, meal, luggage, terminal) FROM stdin;
 \.
 
 
@@ -446,10 +447,10 @@ ALTER TABLE ONLY public.flights
 
 
 --
--- Name: tickets tickets_pkey; Type: CONSTRAINT; Schema: public; Owner: nocturndev
+-- Name: booking_tickets tickets_pkey; Type: CONSTRAINT; Schema: public; Owner: nocturndev
 --
 
-ALTER TABLE ONLY public.tickets
+ALTER TABLE ONLY public.booking_tickets
     ADD CONSTRAINT tickets_pkey PRIMARY KEY (id);
 
 
@@ -486,10 +487,10 @@ ALTER TABLE ONLY public.flights
 
 
 --
--- Name: tickets fk_booking_id; Type: FK CONSTRAINT; Schema: public; Owner: nocturndev
+-- Name: booking_tickets fk_booking_id; Type: FK CONSTRAINT; Schema: public; Owner: nocturndev
 --
 
-ALTER TABLE ONLY public.tickets
+ALTER TABLE ONLY public.booking_tickets
     ADD CONSTRAINT fk_booking_id FOREIGN KEY (booking_id) REFERENCES public.bookings(id);
 
 
