@@ -5,8 +5,7 @@ const getProfile = async (req, res) => {
   const { userId } = req?.params;
   const userProfileResponse = await getUserById({ userId });
 
-  const { id, name, email, phone_number, city, country, post_code, profile_picture, role, ...others } = userProfileResponse?.rows?.[0];
-  console.log('others', others);
+  const { id, name, email, phone_number, city, country, post_code, profile_picture, role } = userProfileResponse?.rows?.[0];
   const responseData = {
     id,
     name,

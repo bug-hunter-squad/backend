@@ -17,10 +17,12 @@ app.use(bodyParser.json());
 // ROUTES DECLARATION
 const authRoutes = require('./routes/authRoutes');
 const profileRoutes = require('./routes/profileRoutes');
+const tempRoutes = require('./routes/tempRoutes');
 
 // PUBLIC ROUTES
 app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
+app.use('/flight', tempRoutes);
 
 // PRIVATE ROUTES
 /* Routes list */
