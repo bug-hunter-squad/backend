@@ -184,9 +184,7 @@ CREATE TABLE public.flights (
     wifi boolean NOT NULL,
     meal boolean NOT NULL,
     luggage boolean NOT NULL,
-    terminal character varying,
-    business_price integer,
-    first_class_price integer
+    terminal character varying
 );
 
 
@@ -358,17 +356,19 @@ COPY public.bookings (id, user_id, flight_id, booking_status, booking_date, tota
 -- Data for Name: flights; Type: TABLE DATA; Schema: public; Owner: nocturndev
 --
 
-COPY public.flights (id, airline_id, original, destination, gate, price, total_child_ticket, total_adult_ticket, departure_time, arrival_time, wifi, meal, luggage, terminal, business_price, first_class_price) FROM stdin;
-1	1	Bandung	Tokyo	03	5000000	50	50	2022-08-20 10:00:00+07	2022-08-20 16:00:00+07	t	t	t	A	6000000	7000000
-2	3	Jakarta	Qatar	01	2500000	20	70	2022-08-20 05:00:00+07	2022-08-20 18:15:00+07	f	t	t	B	3250000	5000000
-3	1	Tokyo	Jakarta	01	3000000	30	50	2022-08-17 04:00:00+07	2022-08-17 09:00:00+07	f	f	t	A	4500000	6000000
-4	4	Jakarta	Tokyo	08	3500000	60	60	2022-08-17 20:00:00+07	2022-08-18 01:00:00+07	f	t	f	C	4750000	7000000
-5	3	Tokyo	Medan	01	4500000	30	45	2022-08-17 13:00:00+07	2022-08-17 18:00:00+07	t	t	t	F	6750000	9000000
-6	5	Kenya	Jakarta	02	3000000	50	60	2022-08-25 19:00:00+07	2022-08-26 02:00:00+07	t	t	f	C	4500000	6000000
-7	5	Jakarta	Kenya	01	3250000	20	100	2022-08-27 14:00:00+07	2022-08-27 23:45:00+07	t	t	f	D	4377500	6500000
-8	4	Bandung	Singapore	02	1500000	50	50	2022-08-21 07:00:00+07	2022-08-21 10:00:00+07	f	f	t	A	2250000	3000000
-9	4	Singapore	Jakarta	01	1250000	20	70	2022-08-23 10:00:00+07	2022-08-23 13:00:00+07	f	f	t	B	2000000	2500000
-10	4	Jakarta	Singapore	01	1750000	30	70	2022-08-23 12:00:00+07	2022-08-23 14:45:00+07	f	t	t	A	2500000	3500000
+COPY public.flights (id, airline_id, original, destination, gate, price, total_child_ticket, total_adult_ticket, departure_time, arrival_time, wifi, meal, luggage, terminal) FROM stdin;
+1	1	Bandung	Tokyo	03	5000000	50	50	2022-08-20 10:00:00+07	2022-08-20 16:00:00+07	t	t	t	A
+2	3	Jakarta	Qatar	01	2500000	20	70	2022-08-20 05:00:00+07	2022-08-20 18:15:00+07	f	t	t	B
+3	1	Tokyo	Jakarta	01	3000000	30	50	2022-08-17 04:00:00+07	2022-08-17 09:00:00+07	f	f	t	A
+4	4	Jakarta	Tokyo	08	3500000	60	60	2022-08-17 20:00:00+07	2022-08-18 01:00:00+07	f	t	f	C
+5	3	Tokyo	Medan	01	4500000	30	45	2022-08-17 13:00:00+07	2022-08-17 18:00:00+07	t	t	t	F
+6	5	Kenya	Jakarta	02	3000000	50	60	2022-08-25 19:00:00+07	2022-08-26 02:00:00+07	t	t	f	C
+7	5	Jakarta	Kenya	01	3250000	20	100	2022-08-27 14:00:00+07	2022-08-27 23:45:00+07	t	t	f	D
+8	4	Bandung	Singapore	02	1500000	50	50	2022-08-21 07:00:00+07	2022-08-21 10:00:00+07	f	f	t	A
+9	4	Singapore	Jakarta	01	1250000	20	70	2022-08-23 10:00:00+07	2022-08-23 13:00:00+07	f	f	t	B
+10	4	Jakarta	Singapore	01	1750000	30	70	2022-08-23 12:00:00+07	2022-08-23 14:45:00+07	f	t	t	A
+11	6	Jakarta	Qatar	02	7000000	50	50	2022-08-23 21:00:00+07	2022-08-24 10:00:00+07	t	t	t	C
+12	6	Jakarta	Qatar	01	7000000	30	70	2022-08-23 07:00:00+07	2022-08-23 20:00:00+07	t	t	t	A
 \.
 
 
@@ -377,7 +377,6 @@ COPY public.flights (id, airline_id, original, destination, gate, price, total_c
 --
 
 COPY public.user_profiles (user_id, city, country, post_code, profile_picture, profile_picture_id) FROM stdin;
-1	\N	\N	\N	\N	\N
 \.
 
 
@@ -386,7 +385,6 @@ COPY public.user_profiles (user_id, city, country, post_code, profile_picture, p
 --
 
 COPY public.users (id, name, email, password, phone_number, role) FROM stdin;
-1	Mikhael Kevin	mikhaelkevinlubis1@gmail.com	$2b$10$U7PKgr4Ynepw.2CYLM829OZ2RTk.3SWCf1cKpWsFD3sWP4rHJE.06	\N	customer
 \.
 
 
@@ -394,7 +392,7 @@ COPY public.users (id, name, email, password, phone_number, role) FROM stdin;
 -- Name: airlines_id_seq; Type: SEQUENCE SET; Schema: public; Owner: nocturndev
 --
 
-SELECT pg_catalog.setval('public.airlines_id_seq', 6, true);
+SELECT pg_catalog.setval('public.airlines_id_seq', 7, true);
 
 
 --
@@ -408,7 +406,7 @@ SELECT pg_catalog.setval('public.bookings_id_seq', 1, false);
 -- Name: flights_id_seq; Type: SEQUENCE SET; Schema: public; Owner: nocturndev
 --
 
-SELECT pg_catalog.setval('public.flights_id_seq', 10, true);
+SELECT pg_catalog.setval('public.flights_id_seq', 12, true);
 
 
 --
@@ -422,7 +420,7 @@ SELECT pg_catalog.setval('public.tickets_id_seq', 1, false);
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: nocturndev
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 1, true);
+SELECT pg_catalog.setval('public.users_id_seq', 1, false);
 
 
 --
