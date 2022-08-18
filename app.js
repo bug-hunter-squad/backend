@@ -1,5 +1,5 @@
 require('dotenv').config();
-
+const cors = require("cors");
 // MIDDLEWARES
 const express = require('express');
 const helmet = require('helmet');
@@ -13,6 +13,19 @@ const port = process.env.PORT || process.env.LOCAL_PORT;
 // MIDDLEWARES USAGE
 app.use(helmet());
 app.use(bodyParser.json());
+
+// cors
+const allowlist = ["http://localhost:3000", "http://localhost:3001"];
+const corsOptionsDelegate = function (req, callback) {
+  let corsOptions;
+  if (allowlist.indexOf(req.header("Origin")) !== -1) {
+    corsOptions = { origin: true };
+  } else {
+    corsOptions = { origin: false };
+  } 
+  callback(null, corsOptions);
+};
+app.use(cors(corsOptionsDelegate));
 
 // ROUTES DECLARATION
 const authRoutes = require('./routes/authRoutes');
