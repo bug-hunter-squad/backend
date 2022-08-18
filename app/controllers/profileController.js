@@ -49,7 +49,7 @@ const editProfile = async (req, res) => {
 
   await editProfileModel(dataToSend);
 
-  res.status(200).send('Connected');
+  res.status(200).send({ message: 'Profile update successful!' });
 };
 
 module.exports = { getProfile, editProfile };
