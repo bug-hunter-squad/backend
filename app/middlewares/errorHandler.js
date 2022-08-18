@@ -5,6 +5,10 @@ const errorHandler = (error, req, res, next) => {
     error.message = 'Email is already taken';
   }
 
+  if (error?.code === '23505' && error?.constraint === 'users_phone_number_key') {
+    error.message = 'Phone number is already taken';
+  }
+
   // Error Response
   res.status(error.status || 500).send({
     message: error?.message || 'Internal server error'
