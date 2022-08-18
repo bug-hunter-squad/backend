@@ -24,7 +24,7 @@ const uploadSingle = (req, res, next) => {
 };
 
 const uploadProfile = (req, res, next) => {
-  const uploadSingle = multerUtils.single('profile');
+  const uploadSingle = multerUtils.single('profilePicture');
 
   uploadSingle(req, res, (err) => {
     try {
