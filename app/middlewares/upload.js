@@ -1,5 +1,5 @@
 const multer = require('multer');
-const multerUtils = require('../multer');
+const multerUtils = require('../../multer');
 
 const uploadSingle = (req, res, next) => {
   const uploadSingle = multerUtils.single('image');
@@ -45,7 +45,7 @@ const uploadProfile = (req, res, next) => {
 };
 
 const uploadAirlines = (req, res, next) => {
-  const uploadSingle = multerUtils.single('airlines');
+  const uploadSingle = multerUtils.single('airline_logo');
 
   uploadSingle(req, res, (err) => {
     try {
