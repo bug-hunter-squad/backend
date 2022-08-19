@@ -1,7 +1,8 @@
 const { ErrorResponse } = require('../../utils/errorResponse');
-const { flightFilter } = require('../models/TempFlights');
+const { flightFilterModel, flightDetailModel, flightBookingModel } = require('../models/TempFlights');
+const { getUserById } = require('../models/Profile');
 
-const searchFlight = async (req, res) => {
+const searchFilterFlight = async (req, res) => {
   let {
     original,
     destination,
@@ -51,9 +52,9 @@ const searchFlight = async (req, res) => {
     maxPrice
   };
 
-  const filterResponse = await flightFilter(requestData);
-
+  const filterResponse = await flightFilterModel(requestData);
   const tempFlightInformation = filterResponse?.rows;
+
   tempFlightInformation?.map(item => {
     if (item.flight_time) {
       const flightTime = item.flight_time;
@@ -148,4 +149,18 @@ const searchFlight = async (req, res) => {
   res.status(200).send({ flightTotal, flightInformation });
 };
 
-module.exports = searchFlight;
+const flightBooking = async (req, res) => {
+  const { userId, flightId } = req.params;
+  const { totalChildPassenger, totalAdultPassenger, flightClass, totalPrice } = req.body;
+  const bookingDate = new Date();
+
+  // Validator user & flight checker
+  await getUserById({ userId });
+  await flightDetailModel({ flightId });
+
+  await flightBookingModel({ ...req.params, totalChildPassenger, totalAdultPassenger, flightClass, totalPrice, bookingDate });
+
+  res.status(200).send('Connected');
+};
+
+module.exports = { searchFilterFlight, flightBooking };
