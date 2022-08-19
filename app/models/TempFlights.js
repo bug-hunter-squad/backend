@@ -42,7 +42,8 @@ const flightDetailModel = (requestData) => {
     db.query('SELECT * FROM flights where id=$1',
       [requestData?.flightId],
       (error, result) => {
-        if (error) return reject(new ErrorResponse('Flights not found!'));
+        if (error) return reject(error);
+        if (result?.rowCount === 0) return reject(new ErrorResponse('Flights not found!'));
         resolve(result);
       });
   });
