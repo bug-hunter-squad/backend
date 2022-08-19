@@ -1,7 +1,9 @@
 const { ErrorResponse } = require('../../utils/errorResponse');
-const { flightFilter } = require('../models/TempFlights');
+const { flightTimeConverter, timestampConverter } = require('../../utils/timeConverter');
+const { flightFilterModel, flightDetailModel, flightBookingModel } = require('../models/TempFlights');
+const { getUserById } = require('../models/User');
 
-const searchFlight = async (req, res) => {
+const searchFilterFlight = async (req, res) => {
   let {
     original,
     destination,
@@ -51,30 +53,13 @@ const searchFlight = async (req, res) => {
     maxPrice
   };
 
-  const filterResponse = await flightFilter(requestData);
-
+  const filterResponse = await flightFilterModel(requestData);
   const tempFlightInformation = filterResponse?.rows;
+
   tempFlightInformation?.map(item => {
-    if (item.flight_time) {
-      const flightTime = item.flight_time;
-      const flightTimeHours = flightTime.getUTCHours();
-      const flightTimeMinutes = flightTime.getUTCMinutes();
-      item.flight_time = `${flightTimeHours} hours ${flightTimeMinutes} minutes`;
-      if (!flightTimeMinutes) item.flight_time = `${flightTimeHours} hours`;
-    }
-
-    if (item.departure_time) {
-      const stringDeparture = new Date(item?.departure_time).toLocaleString('in-ID', { timeZone: 'Asia/Jakarta', dateStyle: 'short', timeStyle: 'short' }).split(' ');
-      stringDeparture[1] = stringDeparture[1].replace('.', ':');
-      item.departure_time = stringDeparture.join(' ');
-    }
-
-    if (item.arrival_time) {
-      const stringArrival = new Date(item?.arrival_time).toLocaleString('in-ID', { timeZone: 'Asia/Jakarta', dateStyle: 'short', timeStyle: 'short' }).split(' ');
-      stringArrival[1] = stringArrival[1].replace('.', ':');
-      item.arrival_time = stringArrival.join(' ');
-    }
-
+    if (item.flight_time) item.flight_time = flightTimeConverter(item?.flight_time);
+    if (item.departure_time) item.departure_time = timestampConverter(item?.departure_time);
+    if (item.arrival_time) item.arrival_time = timestampConverter(item?.arrival_time);
     return item;
   });
 
@@ -148,4 +133,17 @@ const searchFlight = async (req, res) => {
   res.status(200).send({ flightTotal, flightInformation });
 };
 
-module.exports = searchFlight;
+const flightBooking = async (req, res) => {
+  const { userId, flightId } = req.params;
+  const { totalChildPassenger, totalAdultPassenger, flightClass, totalPrice } = req.body;
+  const bookingDate = new Date();
+
+  // Validator user & flight checker
+  await getUserById({ userId });
+  await flightDetailModel({ flightId });
+  await flightBookingModel({ ...req.params, totalChildPassenger, totalAdultPassenger, flightClass, totalPrice, bookingDate });
+
+  res.status(200).send({ message: 'Flight booking successful!' });
+};
+
+module.exports = { searchFilterFlight, flightBooking };

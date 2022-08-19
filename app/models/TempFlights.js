@@ -1,11 +1,12 @@
 const db = require('../../configs/database');
+const { ErrorResponse } = require('../../utils/errorResponse');
 
-const flightFilter = (requestData) => {
+const flightFilterModel = (requestData) => {
   let conditionalPrice = 'AND (flights.price * 1.25) >= $8 AND (flights.price * 1.25) <= $9';
   if (requestData?.flightClass === 'business') conditionalPrice = 'AND (flights.price * 1.5) >= $8 AND (flights.price * 1.5) <= $9';
   if (requestData?.flightClass === 'first class') conditionalPrice = 'AND (flights.price * 2) >= $8 AND (flights.price * 2) <= $9';
   return new Promise((resolve, reject) => {
-    db.query(`SELECT flights.id as flight_id, flights.*, (flights.price * 2) as multiple_price, airlines.*, 
+    db.query(`SELECT flights.id as flight_id, flights.*, airlines.*, 
     to_timestamp(EXTRACT(EPOCH FROM flights.arrival_time) - EXTRACT(EPOCH FROM flights.departure_time)) as flight_time 
     FROM flights 
     JOIN airlines
@@ -36,4 +37,29 @@ const flightFilter = (requestData) => {
   });
 };
 
-module.exports = { flightFilter };
+const flightDetailModel = (requestData) => {
+  return new Promise((resolve, reject) => {
+    db.query('SELECT * FROM flights where id=$1',
+      [requestData?.flightId],
+      (error, result) => {
+        if (error) return reject(error);
+        if (result?.rowCount === 0) return reject(new ErrorResponse('Flights not found!'));
+        resolve(result);
+      });
+  });
+};
+
+const flightBookingModel = (requestData) => {
+  return new Promise((resolve, reject) => {
+    db.query(`INSERT INTO bookings(user_id, flight_id, booking_status, booking_date, total_child_passenger, total_adult_passenger, flight_class, total_price)
+    VALUES ($1, $2, 'waiting', $3, $4, $5, $6, $7)`,
+    [requestData?.userId, requestData?.flightId, requestData?.bookingDate, requestData?.totalChildPassenger, requestData?.totalAdultPassenger, requestData?.flightClass, requestData?.totalPrice],
+    (error, result) => {
+      if (error) return reject(error);
+      resolve(result);
+    }
+    );
+  });
+};
+
+module.exports = { flightFilterModel, flightDetailModel, flightBookingModel };

@@ -29,13 +29,13 @@ app.use(cors(corsOptionsDelegate));
 
 // ROUTES DECLARATION
 const authRoutes = require('./routes/authRoutes');
-const profileRoutes = require('./routes/profileRoutes');
+const userRoutes = require('./routes/userRoutes');
 const tempRoutes = require('./routes/tempRoutes');
 const airlineRoutes = require('./routes/airlineRoutes');
 
 // PUBLIC ROUTES
 app.use('/auth', authRoutes);
-app.use('/profile', profileRoutes);
+app.use('/profile', userRoutes);
 app.use('/flight', tempRoutes);
 app.use('/airlines', airlineRoutes);
 
