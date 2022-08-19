@@ -6,7 +6,7 @@ const flightFilterModel = (requestData) => {
   if (requestData?.flightClass === 'business') conditionalPrice = 'AND (flights.price * 1.5) >= $8 AND (flights.price * 1.5) <= $9';
   if (requestData?.flightClass === 'first class') conditionalPrice = 'AND (flights.price * 2) >= $8 AND (flights.price * 2) <= $9';
   return new Promise((resolve, reject) => {
-    db.query(`SELECT flights.id as flight_id, flights.*, (flights.price * 2) as multiple_price, airlines.*, 
+    db.query(`SELECT flights.id as flight_id, flights.*, airlines.*, 
     to_timestamp(EXTRACT(EPOCH FROM flights.arrival_time) - EXTRACT(EPOCH FROM flights.departure_time)) as flight_time 
     FROM flights 
     JOIN airlines

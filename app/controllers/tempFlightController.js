@@ -1,6 +1,7 @@
 const { ErrorResponse } = require('../../utils/errorResponse');
+const { flightTimeConverter, timestampConverter } = require('../../utils/timeConverter');
 const { flightFilterModel, flightDetailModel, flightBookingModel } = require('../models/TempFlights');
-const { getUserById } = require('../models/Profile');
+const { getUserById } = require('../models/User');
 
 const searchFilterFlight = async (req, res) => {
   let {
@@ -56,26 +57,9 @@ const searchFilterFlight = async (req, res) => {
   const tempFlightInformation = filterResponse?.rows;
 
   tempFlightInformation?.map(item => {
-    if (item.flight_time) {
-      const flightTime = item.flight_time;
-      const flightTimeHours = flightTime.getUTCHours();
-      const flightTimeMinutes = flightTime.getUTCMinutes();
-      item.flight_time = `${flightTimeHours} hours ${flightTimeMinutes} minutes`;
-      if (!flightTimeMinutes) item.flight_time = `${flightTimeHours} hours`;
-    }
-
-    if (item.departure_time) {
-      const stringDeparture = new Date(item?.departure_time).toLocaleString('in-ID', { timeZone: 'Asia/Jakarta', dateStyle: 'short', timeStyle: 'short' }).split(' ');
-      stringDeparture[1] = stringDeparture[1].replace('.', ':');
-      item.departure_time = stringDeparture.join(' ');
-    }
-
-    if (item.arrival_time) {
-      const stringArrival = new Date(item?.arrival_time).toLocaleString('in-ID', { timeZone: 'Asia/Jakarta', dateStyle: 'short', timeStyle: 'short' }).split(' ');
-      stringArrival[1] = stringArrival[1].replace('.', ':');
-      item.arrival_time = stringArrival.join(' ');
-    }
-
+    if (item.flight_time) item.flight_time = flightTimeConverter(item?.flight_time);
+    if (item.departure_time) item.departure_time = timestampConverter(item?.departure_time);
+    if (item.arrival_time) item.arrival_time = timestampConverter(item?.arrival_time);
     return item;
   });
 
@@ -157,10 +141,9 @@ const flightBooking = async (req, res) => {
   // Validator user & flight checker
   await getUserById({ userId });
   await flightDetailModel({ flightId });
-
   await flightBookingModel({ ...req.params, totalChildPassenger, totalAdultPassenger, flightClass, totalPrice, bookingDate });
 
-  res.status(200).send('Connected');
+  res.status(200).send({ message: 'Flight booking successful!' });
 };
 
 module.exports = { searchFilterFlight, flightBooking };
