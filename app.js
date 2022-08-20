@@ -40,6 +40,9 @@ app.use('/profile', userRoutes);
 // app.use('/flight', tempRoutes);
 app.use('/airlines', airlineRoutes);
 app.use('/flight', flightRoutes);
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
 
 // PRIVATE ROUTES
 /* Routes list */

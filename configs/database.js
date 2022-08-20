@@ -4,7 +4,7 @@ let connection;
 
 if (process.env.DEPLOYMENT === 'true') {
   connection = new Client({
-    connectionString: process.env.DB_URI,
+    connectionString: process.env.DATABASE_URL,
     ssl: {
       rejectUnauthorized: false
     }
