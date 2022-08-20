@@ -1,7 +1,14 @@
-const { deletedFlightInformation, createFlightsInformation, editFlightsInformation, getDetailFlightsInformation, searchFilterFlight, flightBooking } = require('../app/controllers/flightController');
 const flightRoutes = require('express').Router();
 const urlencoded = require('body-parser').urlencoded({ extended: false });
 const { asyncHandler } = require('../app/middlewares/asyncHandler');
+const {
+  deletedFlightInformation,
+  createFlightsInformation,
+  editFlightsInformation,
+  getDetailFlightsInformation,
+  searchFilterFlight,
+  flightBooking
+} = require('../app/controllers/flightController');
 
 flightRoutes.get('/:id', getDetailFlightsInformation);
 flightRoutes.post('/', urlencoded, createFlightsInformation);

@@ -27,7 +27,7 @@ const getFlightInformationById = (id) => {
 
 const getDetailFlightInformation = (id) => {
   return new Promise((resolve, reject) => {
-    db.query(`SELECT * FROM flights FULL OUTER JOIN airlines ON flights.id = airlines.id WHERE flights.id = ${id} ORDER BY flights.id DESC`, (error, result) => {
+    db.query(`SELECT flights.*, flights.id as flight_id FROM flights FULL OUTER JOIN airlines ON flights.airline_id = airlines.id WHERE flights.id = ${id} ORDER BY flights.id DESC`, (error, result) => {
       if (error) {
         reject(error);
       } else {

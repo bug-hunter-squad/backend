@@ -1,7 +1,19 @@
+/* eslint-disable camelcase */
 const { ErrorResponse } = require('../../utils/errorResponse');
 const { flightTimeConverter, timestampConverter } = require('../../utils/timeConverter');
 const { getUserById } = require('../models/User');
-const { getFlightsInformation, getFlightInformationById, getDetailFlightInformation, createFlightInformation, editFlightInformation, deleteFlightInformation, flightFilterModel, flightDetailModel, flightBookingModel } = require('../models/Flight');
+const {
+  getFlightsInformation,
+  getFlightInformationById,
+  getDetailFlightInformation,
+  createFlightInformation,
+  editFlightInformation,
+  deleteFlightInformation,
+  flightFilterModel,
+  flightDetailModel,
+  flightBookingModel
+} = require('../models/Flight');
+const { getAirlineById } = require('../models/Airline');
 
 const getAllFlights = async (req, res) => {
   try {
@@ -37,9 +49,11 @@ const getFlightsInformationById = async (req, res) => {
 
 const createFlightsInformation = async (req, res) => {
   try {
-    await createFlightInformation({
-      ...req.body
-    });
+    const { airline_id: airlinesId } = req.body;
+    const getAirlineData = await getAirlineById({ airlinesId });
+    if (!getAirlineData?.rowCount) return res.status(404).send('Airline not found!');
+
+    await createFlightInformation({ ...req.body });
     res.status(200).send('Success create flight information');
   } catch (error) {
     console.log('error', error);
@@ -51,8 +65,25 @@ const getDetailFlightsInformation = async (req, res) => {
   try {
     const { id } = req.params;
     const getData = await getDetailFlightInformation(id);
+    const detailFlightData = getData?.rows?.map((item) => ({
+      flight_id: item?.flight_id,
+      airline_id: item?.airline_id,
+      original: item?.original,
+      destination: item?.destination,
+      terminal: item?.terminal,
+      gate: item?.gate,
+      price: item?.price,
+      total_child_ticket: item?.total_child_ticket,
+      total_adult_ticket: item?.total_adult_ticket,
+      departure_time: item?.departure_time,
+      arrival_time: item?.arrival_time,
+      wifi: item?.wifi,
+      meal: item?.meal,
+      luggage: item?.luggage
+    }));
+
     res.status(200).json({
-      DetailFlightInformation: getData?.rows,
+      DetailFlightInformation: detailFlightData,
       jumlahData: getData?.rowCount
     });
   } catch (error) {
@@ -63,12 +94,31 @@ const getDetailFlightsInformation = async (req, res) => {
 
 const editFlightsInformation = async (req, res) => {
   try {
-    const {
-      flightId
-    } = req.params;
-    await editFlightInformation(flightId, {
-      ...req.body
-    });
+    const { flightId } = req.params;
+    const { airline_id, original, destination, gate, terminal, price, total_child_ticket, total_adult_ticket, departure_time, arrival_time, wifi, meal, luggage } = req?.body;
+
+    const flightChecker = await getFlightInformationById(flightId);
+    if (!flightChecker?.rowCount) return res.status(404).send('Flight not found!');
+
+    const flightData = flightChecker?.rows?.[0];
+
+    const requestData = {
+      airline_id: airline_id || flightData?.airline_id,
+      original: original || flightData?.original,
+      destination: destination || flightData?.destination,
+      gate: gate || flightData?.gate,
+      terminal: terminal || flightData?.terminal,
+      price: price || flightData?.price,
+      total_child_ticket: total_child_ticket || flightData?.total_child_ticket,
+      total_adult_ticket: total_adult_ticket || flightData?.total_adult_ticket,
+      departure_time: departure_time || flightData?.departure_time,
+      arrival_time: arrival_time || flightData?.arrival_time,
+      wifi: wifi || flightData?.wifi,
+      meal: meal || flightData?.meal,
+      luggage: luggage || flightData?.luggage
+    };
+
+    await editFlightInformation(flightId, requestData);
     res.status(200).send('Success edit airline');
   } catch (error) {
     console.log('error', error);

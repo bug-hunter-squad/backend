@@ -1,5 +1,4 @@
 const db = require('../../configs/database');
-const { ErrorResponse } = require('../../utils/errorResponse');
 
 const getAirlineById = (requestData) => {
   return new Promise((resolve, reject) => {
@@ -9,9 +8,6 @@ const getAirlineById = (requestData) => {
       [requestData.airlinesId],
       (error, result) => {
         if (error) return reject(error);
-        if (result?.rowCount === 0) {
-          return reject(new ErrorResponse('Airline not found', 404));
-        }
         resolve(result);
       }
     );

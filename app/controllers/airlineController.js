@@ -1,5 +1,4 @@
 /* eslint-disable camelcase */
-const { ErrorResponse } = require('../../utils/errorResponse');
 const cloudinary = require('../middlewares/couldinary');
 
 const {
@@ -28,7 +27,8 @@ const createAirlines = async (req, res) => {
   try {
     await createAirline({
       ...req.body,
-      airline_logo: req.file.url
+      airline_logo: req?.file?.secure_url,
+      airline_logo_id: req?.file?.public_id
     });
     res.status(200).send('Success create airline');
   } catch (error) {
@@ -68,21 +68,13 @@ const editAirlines = async (req, res) => {
 };
 
 const deleteAirlines = async (req, res) => {
-  const {
-    airlinesId
-  } = req.params;
-  const getData = await getAirlineById({
-    airlinesId
-  });
-  if (!getData?.rowCount) throw new ErrorResponse('data tidak ada', 400);
+  const { airlinesId } = req.params;
+
+  const getData = await getAirlineById({ airlinesId });
+  if (!getData?.rowCount) return res.status(404).send('Data tidak ada');
+
   await deleteAirline(airlinesId);
   res.send(`data id ke-${airlinesId} berhasil dihapus`);
-  //   if (getData?.rowCount) {
-  //     await deleteAirline(airlinesId);
-  //     res.send(`data id ke-${airlinesId} berhasil dihapus`);
-  //   } else {
-  //     res.status(400).send('data tidak ditemukan');
-  //   }
 };
 
 module.exports = {
