@@ -1,7 +1,6 @@
 /* eslint-disable camelcase */
-const {
-  ErrorResponse
-} = require('../../utils/errorResponse');
+const { ErrorResponse } = require('../../utils/errorResponse');
+const cloudinary = require('../middlewares/couldinary');
 
 const {
   getAirlines,
@@ -40,13 +39,27 @@ const createAirlines = async (req, res) => {
 
 const editAirlines = async (req, res) => {
   try {
-    const {
-      airlinesId
-    } = req.params;
-    await editAirline(airlinesId, {
-      ...req.body,
-      airline_logo: req.file.url
-    });
+    const { airlinesId } = req.params;
+    const { airline_name, airline_pic, airline_pic_phone_number, airline_status } = req.body;
+    const airlinesLogo = req?.file?.secure_url;
+    const airlinesLogoId = req?.file?.public_id;
+
+    const getAirlineResponse = await getAirlineById({ airlinesId });
+    const currentAirlineData = getAirlineResponse?.rows?.[0];
+
+    const airlineLogoChecker = airlinesLogo && airlinesLogoId && currentAirlineData?.airline_logo_id;
+    if (airlineLogoChecker) await cloudinary.uploader.destroy(currentAirlineData?.airline_logo_id);
+
+    const requestData = {
+      airline_name: airline_name || currentAirlineData?.airline_name,
+      airline_pic: airline_pic || currentAirlineData?.airline_pic,
+      airline_pic_phone_number: airline_pic_phone_number || currentAirlineData?.airline_pic_phone_number,
+      airline_status: airline_status || currentAirlineData?.airline_status,
+      airline_logo: airlinesLogo || currentAirlineData?.airline_logo,
+      airline_logo_id: airlinesLogoId || currentAirlineData?.airline_logo_id
+    };
+
+    await editAirline(airlinesId, requestData);
     res.status(200).send('Success edit airline');
   } catch (error) {
     console.log('error', error);
