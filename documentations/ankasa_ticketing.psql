@@ -34,7 +34,7 @@ ALTER TYPE public.airline_status OWNER TO nocturndev;
 
 CREATE TYPE public.booking_status AS ENUM (
     'paid',
-    'pending',
+    'waiting',
     'issued',
     'canceled'
 );
@@ -349,6 +349,21 @@ COPY public.booking_tickets (id, booking_id, passenger_name, nationality) FROM s
 --
 
 COPY public.bookings (id, user_id, flight_id, booking_status, booking_date, total_child_passenger, total_adult_passenger, flight_class, total_price, rating) FROM stdin;
+5	2	3	waiting	2022-08-19 18:52:52.184+07	\N	\N	first class	\N	\N
+6	2	3	waiting	2022-08-19 19:00:28.768+07	\N	\N	economy	\N	\N
+7	2	3	waiting	2022-08-19 19:00:57.65+07	0	2	economy	\N	\N
+8	2	3	waiting	2022-08-19 19:05:56.048+07	0	2	economy	2500000	\N
+9	2	3	waiting	2022-08-19 19:50:24.548+07	1	2	economy	2500000	\N
+10	2	3	waiting	2022-08-19 19:51:37.811+07	1	2	first class	2500000	\N
+11	2	10	waiting	2022-08-19 21:00:40.752+07	1	2	first class	2500000	\N
+2	1	1	waiting	2022-08-19 18:47:15.668+07	2	2	first class	2500000	5
+1	1	1	waiting	2022-08-19 18:46:43.388+07	2	2	first class	2500000	5
+3	2	3	paid	2022-08-19 18:48:17.613+07	2	2	first class	2500000	\N
+12	1	4	paid	2022-08-20 01:00:09.32+07	1	2	first class	2500000	4
+13	3	6	waiting	2022-08-20 03:16:56.734+07	1	2	first class	2500000	\N
+16	3	3	paid	2022-08-20 03:43:56.338+07	1	2	first class	3000000	4
+15	3	6	paid	2022-08-20 03:24:10.499+07	1	2	first class	3000000	\N
+17	3	3	issued	2022-08-20 16:16:56.821+07	1	2	first class	3000000	\N
 \.
 
 
@@ -368,7 +383,7 @@ COPY public.flights (id, airline_id, original, destination, gate, price, total_c
 9	4	Singapore	Jakarta	01	1250000	20	70	2022-08-23 10:00:00+07	2022-08-23 13:00:00+07	f	f	t	B
 10	4	Jakarta	Singapore	01	1750000	30	70	2022-08-23 12:00:00+07	2022-08-23 14:45:00+07	f	t	t	A
 11	6	Jakarta	Qatar	02	7000000	50	50	2022-08-23 21:00:00+07	2022-08-24 10:00:00+07	t	t	t	C
-12	6	Jakarta	Qatar	01	7000000	30	70	2022-08-23 07:00:00+07	2022-08-23 20:00:00+07	t	t	t	A
+12	6	Jakarta	Qatar	01	7000000	30	70	2022-08-23 07:00:00+07	2022-08-23 20:00:00+07	f	t	t	A
 \.
 
 
@@ -377,6 +392,9 @@ COPY public.flights (id, airline_id, original, destination, gate, price, total_c
 --
 
 COPY public.user_profiles (user_id, city, country, post_code, profile_picture, profile_picture_id) FROM stdin;
+1	Los Angeles	USA	90001	https://res.cloudinary.com/dwg17vn35/image/upload/v1660844189/zqpibbcndc4gbb2rcd87.jpg	zqpibbcndc4gbb2rcd87
+2	Cimahi	Indonesia	40511	https://res.cloudinary.com/dwg17vn35/image/upload/v1660845413/oqhzvvyqdohud0yhs0fu.jpg	oqhzvvyqdohud0yhs0fu
+3	Bandung	Indonesia	40211	https://res.cloudinary.com/dwg17vn35/image/upload/v1660947608/yekag12aidsxwgygx1db.jpg	yekag12aidsxwgygx1db
 \.
 
 
@@ -385,6 +403,9 @@ COPY public.user_profiles (user_id, city, country, post_code, profile_picture, p
 --
 
 COPY public.users (id, name, email, password, phone_number, role) FROM stdin;
+1	Xavier Chev Havier	xavierhavier@gmail.com	$2b$10$UrVDv7YYZOUCiLDf15UPA.EKSy.fz7rlKg5QSQBzICI/PrVupKEvC	3194211685	customer
+2	Mikhael Kevin Lubis	mikhaelkevinlubis@gmail.com	$2b$10$Q/zSZ46orNtlSsAyEp46buCyifLzgrgDq1BW9gbkAHwOUCYXbYKqy	081297915965	customer
+3	Donald Wackey	donaldwackey@gmail.com	$2b$10$3zgSiopLIAnFja9ke46T2OMgR4F0jjEOnydMhmjb1XnIlRXyUZkjS	081297915123	customer
 \.
 
 
@@ -399,7 +420,7 @@ SELECT pg_catalog.setval('public.airlines_id_seq', 7, true);
 -- Name: bookings_id_seq; Type: SEQUENCE SET; Schema: public; Owner: nocturndev
 --
 
-SELECT pg_catalog.setval('public.bookings_id_seq', 1, false);
+SELECT pg_catalog.setval('public.bookings_id_seq', 17, true);
 
 
 --
@@ -420,7 +441,7 @@ SELECT pg_catalog.setval('public.tickets_id_seq', 1, false);
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: nocturndev
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 1, false);
+SELECT pg_catalog.setval('public.users_id_seq', 5, true);
 
 
 --
