@@ -32,12 +32,14 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const tempRoutes = require('./routes/tempRoutes');
 const airlineRoutes = require('./routes/airlineRoutes');
+const flightRoutes = require('./routes/flightRoutes');
 
 // PUBLIC ROUTES
 app.use('/auth', authRoutes);
 app.use('/profile', userRoutes);
 app.use('/flight', tempRoutes);
 app.use('/airlines', airlineRoutes);
+app.use('/flight', flightRoutes);
 
 // PRIVATE ROUTES
 /* Routes list */
