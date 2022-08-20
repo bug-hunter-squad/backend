@@ -53,7 +53,7 @@ const getAllBookingsModel = (requestData) => {
     FROM bookings
     JOIN flights ON bookings.flight_id = flights.id
     JOIN airlines ON flights.airline_id = airlines.id
-     WHERE user_id=$1`,
+     WHERE bookings.user_id=$1`,
     [requestData?.userId],
     (error, result) => {
       if (error) return reject(error);
