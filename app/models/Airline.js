@@ -54,17 +54,17 @@ const createAirline = (props) => {
   });
 };
 
-const editAirline = (id, props) => {
+const editAirline = (id, requestData) => {
   return new Promise((resolve, reject) => {
     db.query(
       'UPDATE airlines SET airline_name = $1, airline_logo = $2, airline_pic = $3, airline_pic_phone_number = $4, airline_status = $5, airline_logo_id = $6 WHERE id = $7',
       [
-        props.airline_name,
-        props.airline_logo,
-        props.airline_pic,
-        props.airline_pic_phone_number,
-        props.airline_status,
-        props.airline_logo_id,
+        requestData.airline_name,
+        requestData.airline_logo,
+        requestData.airline_pic,
+        requestData.airline_pic_phone_number,
+        requestData.airline_status,
+        requestData.airline_logo_id,
         id
       ],
       (error, result) => {
