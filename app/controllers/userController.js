@@ -56,9 +56,16 @@ const editProfile = async (req, res) => {
 
 const getBookings = async (req, res) => {
   const { userId } = req.params;
+  const currentDate = new Date();
 
-  const getBookingsResponse = await getAllBookingsModel({ userId });
-  const bookingsData = getBookingsResponse?.rows;
+  const getBookingsResponse = await getAllBookingsModel({ userId, currentDate });
+  let bookingsData = getBookingsResponse?.rows;
+
+  // bookingsData = bookingsData?.filter(item => item?.booking_status === 'paid' && currentDate < item?.arrival_time);
+  bookingsData = bookingsData?.filter(item => {
+    if (currentDate > item?.arrival_time && item?.booking_status !== 'paid') return item;
+    return currentDate < item?.arrival_time;
+  });
 
   bookingsData?.map(item => {
     if (item.flight_time) item.flight_time = flightTimeConverter(item?.flight_time);
@@ -91,6 +98,8 @@ const getBookings = async (req, res) => {
     airlinePic: item?.airline_pic,
     airlinePicPhoneNumber: item?.airline_pic_phone_number
   }));
+
+  // console.log('x', x);
 
   res.status(200).send(bookingsInformation);
 };
