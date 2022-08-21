@@ -183,10 +183,12 @@ const flightBookingPaymentModel = (requestData) => {
 };
 
 const flightBookingStatusModel = (requestData) => {
+  console.log('Model parameter :>> ', requestData?.transactionStatus, requestData?.orderId);
   return new Promise((resolve, reject) => {
     db.query('UPDATE bookings SET booking_status=$1 WHERE payment_id=$2',
       [requestData?.transactionStatus, requestData?.orderId],
       (error, result) => {
+        console.log('error>>>>>', error);
         if (error) return reject(error);
         if (!result?.rowCount) return reject(new ErrorResponse('Missing payment credentials!'));
         resolve(result);
