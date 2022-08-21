@@ -48,6 +48,7 @@ const editAirlines = async (req, res) => {
     const airlinesLogoId = req?.file?.public_id;
 
     const getAirlineResponse = await getAirlineById({ airlinesId });
+    if (!getAirlineResponse.length) return res.status(404).send('Airline not found!');
     const currentAirlineData = getAirlineResponse?.rows?.[0];
 
     const airlineLogoChecker = airlinesLogo && airlinesLogoId && currentAirlineData?.airline_logo_id;
