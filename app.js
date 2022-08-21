@@ -5,7 +5,6 @@ const express = require('express');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const { errorHandler } = require('./app/middlewares/errorHandler');
-
 // CONFIG
 const app = express();
 const port = process.env.PORT || process.env.LOCAL_PORT;
@@ -13,6 +12,7 @@ const port = process.env.PORT || process.env.LOCAL_PORT;
 // MIDDLEWARES USAGE
 app.use(helmet());
 app.use(bodyParser.json());
+app.use('/public', express.static('public'));
 
 // cors
 const allowlist = ['http://localhost:3000', 'http://localhost:3001'];
@@ -41,9 +41,6 @@ app.use('/flight', flightRoutes);
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
-
-// PRIVATE ROUTES
-/* Routes list */
 
 // ERROR HANDLER
 app.use(errorHandler);

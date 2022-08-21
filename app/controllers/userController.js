@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
-const cloudinary = require('../middlewares/couldinary');
 const { getUserById, editProfileModel, getAllBookingsModel, getDetailBookingModel, rateFlightModel, getFlightReviewsModel } = require('../models/User');
 const { flightTimeConverter, timestampConverter } = require('../../utils/timeConverter');
+const cloudinary = require('../../utils/couldinary');
 const { ErrorResponse } = require('../../utils/errorResponse');
 
 const getProfile = async (req, res) => {
@@ -27,8 +27,12 @@ const getProfile = async (req, res) => {
 const editProfile = async (req, res) => {
   const { userId } = req.params;
   const { email, phoneNumber, name, city, country, postCode, role } = req.body;
-  const profilePictureUrl = req?.file?.secure_url;
-  const profilePictureId = req?.file?.public_id;
+  const pathImage = req.file.path;
+  const pictureData = await cloudinary.uploader.upload(pathImage, {
+    folder: 'Profile'
+  });
+  const profilePictureUrl = pictureData.secure_url;
+  const profilePictureId = pictureData.public_id;
 
   const responseGetUser = await getUserById({ userId });
   const currentUserData = responseGetUser?.rows?.[0];

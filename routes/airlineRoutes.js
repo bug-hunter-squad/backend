@@ -1,6 +1,6 @@
 const airlineRoutes = require('express').Router();
 const urlencoded = require('body-parser').urlencoded({ extended: false });
-// const { uploadAirlines } = require('../app/middlewares/upload.js');
+const { UploadAirlines } = require('../app/middlewares/multer');
 
 const {
   getAirline,
@@ -8,10 +8,10 @@ const {
   editAirlines,
   deleteAirlines
 } = require('../app/controllers/airlineController');
-// uploadAirlines,
+
 airlineRoutes.get('/', getAirline);
-airlineRoutes.post('/', urlencoded,  (createAirlines));
-airlineRoutes.patch('/:airlinesId', urlencoded,  (editAirlines));
+airlineRoutes.post('/', urlencoded, UploadAirlines, createAirlines);
+airlineRoutes.patch('/:airlinesId', editAirlines);
 airlineRoutes.delete('/:airlinesId', deleteAirlines);
 
 module.exports = airlineRoutes;
