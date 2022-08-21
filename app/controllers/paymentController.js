@@ -1,6 +1,7 @@
 const notifications = (req, res) => {
-  console.log('req :>> ', req);
-  res.status(200).send('NGIENG');
+  const { transaction_status: transactionStatus, order_id: orderId } = req?.body;
+
+  res.status(200).send({ transactionStatus, orderId });
 };
 
 module.exports = { notifications };
