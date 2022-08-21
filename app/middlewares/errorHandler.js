@@ -1,10 +1,10 @@
 const errorHandler = (error, req, res, next) => {
   console.log('error', error);
   // Error List
-  if (error?.code === '23505' && error?.constraint === 'users_email_key') {
-    error.message = 'Email is already taken';
-    error.status = 400;
-  }
+  // if (error?.code === '23505' && error?.constraint === 'users_email_key') {
+  //   error.message = 'Email is already taken';
+  //   error.status = 400;
+  // }
 
   if (error?.code === '23505' && error?.constraint === 'users_phone_number_key') {
     error.message = 'Phone number is already taken';
