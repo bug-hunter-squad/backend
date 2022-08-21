@@ -49,8 +49,8 @@ const editAirlines = async (req, res) => {
 
     const getAirlineResponse = await getAirlineById({ airlinesId });
     if (!getAirlineResponse.length) return res.status(404).send('Airline not found!');
-    const currentAirlineData = getAirlineResponse?.rows?.[0];
 
+    const currentAirlineData = getAirlineResponse?.rows?.[0];
     const airlineLogoChecker = airlinesLogo && airlinesLogoId && currentAirlineData?.airline_logo_id;
     if (airlineLogoChecker) await cloudinary.uploader.destroy(currentAirlineData?.airline_logo_id);
 
