@@ -27,7 +27,7 @@ const getProfile = async (req, res) => {
 const editProfile = async (req, res) => {
   const { userId } = req.params;
   const { email, phoneNumber, name, city, country, postCode, role } = req.body;
-  const pathImage = req.file.path;
+  const pathImage = req?.file?.path;
   const pictureData = await cloudinary.uploader.upload(pathImage, {
     folder: 'Profile'
   });
