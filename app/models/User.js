@@ -37,7 +37,7 @@ const editProfileModel = (requestData) => {
       requestData?.profilePictureId
     ],
     (error, result) => {
-      if (error) reject(error);
+      if (error) return reject(error);
       resolve(result);
     }
     );
