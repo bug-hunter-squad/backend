@@ -37,6 +37,7 @@ const editProfileModel = (requestData) => {
       requestData?.profilePictureId
     ],
     (error, result) => {
+      if (error?.code === '23505' && error?.constraint === 'users_email_key') return reject(new ErrorResponse('Email has been taken!', 422));
       if (error) reject(error);
       resolve(result);
     }
