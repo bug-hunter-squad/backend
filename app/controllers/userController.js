@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+const cloudinary = require('../middlewares/couldinary');
 const { getUserById, editProfileModel, getAllBookingsModel, getDetailBookingModel, rateFlightModel, getFlightReviewsModel } = require('../models/User');
 const { flightTimeConverter, timestampConverter } = require('../../utils/timeConverter');
 const cloudinary = require('../../utils/couldinary');

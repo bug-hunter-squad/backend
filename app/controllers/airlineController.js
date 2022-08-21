@@ -72,21 +72,13 @@ const editAirlines = async (req, res) => {
 };
 
 const deleteAirlines = async (req, res) => {
-  const {
-    airlinesId
-  } = req.params;
-  const getData = await getAirlineById({
-    airlinesId
-  });
-  if (!getData?.rowCount) throw new ErrorResponse('data tidak ada', 400);
+  const { airlinesId } = req.params;
+
+  const getData = await getAirlineById({ airlinesId });
+  if (!getData?.rowCount) return res.status(404).send('Data tidak ada');
+
   await deleteAirline(airlinesId);
   res.send(`data id ke-${airlinesId} berhasil dihapus`);
-  //   if (getData?.rowCount) {
-  //     await deleteAirline(airlinesId);
-  //     res.send(`data id ke-${airlinesId} berhasil dihapus`);
-  //   } else {
-  //     res.status(400).send('data tidak ditemukan');
-  //   }
 };
 
 module.exports = {
