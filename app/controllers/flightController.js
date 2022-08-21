@@ -1,7 +1,9 @@
 /* eslint-disable camelcase */
+const { v4: uuidv4 } = require('uuid');
+const { snap } = require('../../configs/payment');
 const { ErrorResponse } = require('../../utils/errorResponse');
 const { flightTimeConverter, timestampConverter } = require('../../utils/timeConverter');
-const { getUserById } = require('../models/User');
+const { getUserById, getDetailBookingModel } = require('../models/User');
 const {
   getFlightsInformation,
   getFlightInformationById,
@@ -10,8 +12,8 @@ const {
   editFlightInformation,
   deleteFlightInformation,
   flightFilterModel,
-  flightDetailModel,
-  flightBookingModel
+  flightBookingModel,
+  flightBookingPaymentModel
 } = require('../models/Flight');
 const { getAirlineById } = require('../models/Airline');
 
@@ -283,10 +285,48 @@ const flightBooking = async (req, res) => {
   const { totalChildPassenger, totalAdultPassenger, flightClass, totalPrice } = req.body;
   const bookingDate = new Date();
 
-  // Validator user & flight checker
-  await getUserById({ userId });
-  await flightDetailModel({ flightId });
-  await flightBookingModel({ ...req.params, totalChildPassenger, totalAdultPassenger, flightClass, totalPrice, bookingDate });
+  const getUserResponse = await getUserById({ userId });
+  const getFlightResponse = await getDetailFlightInformation(flightId);
+  if (!getFlightResponse.rowCount) throw new ErrorResponse('Flight not found!', 404);
+
+  const userData = getUserResponse?.rows?.[0];
+  const flightData = getFlightResponse?.rows?.[0];
+  flightData.id = flightData?.flight_id;
+
+  const bookingResponse = await flightBookingModel({ ...req.params, totalChildPassenger, totalAdultPassenger, flightClass, totalPrice, bookingDate });
+  const bookingData = bookingResponse?.rows?.[0];
+
+  const paymentPayload = {
+    transaction_details: {
+      order_id: uuidv4(),
+      gross_amount: totalPrice
+    },
+    item_details: [{
+      id: bookingData?.id,
+      price: Math.round(totalPrice / (Number(totalChildPassenger) + (Number(totalAdultPassenger)))),
+      quantity: (Number(totalChildPassenger) + Number(totalAdultPassenger)),
+      name: `${flightData?.original} to ${flightData?.destination} Flight Ticket`,
+      brand: flightData?.airline_name,
+      category: 'Flight Ticket',
+      merchant_name: 'Ankasa Ticketing'
+    }],
+    customer_details: {
+      first_name: userData?.name,
+      email: userData?.email,
+      phone: userData?.phone_number
+    }
+  };
+
+  const paymentProcess = await snap.createTransaction(paymentPayload);
+  const requestData = {
+    bookingId: bookingData?.id,
+    paymentId: paymentPayload?.transaction_details?.order_id,
+    paymentToken: paymentProcess?.token,
+    paymentUrl: paymentProcess?.redirect_url
+  };
+
+  await getDetailBookingModel({ bookingId: bookingData?.id, userId });
+  await flightBookingPaymentModel(requestData);
 
   res.status(200).send({ message: 'Flight booking successful!' });
 };

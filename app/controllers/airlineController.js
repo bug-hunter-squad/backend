@@ -1,5 +1,4 @@
 /* eslint-disable camelcase */
-const { ErrorResponse } = require('../../utils/errorResponse');
 const cloudinary = require('../../utils/couldinary');
 
 const {
@@ -25,11 +24,11 @@ const getAirline = async (req, res) => {
 };
 
 const createAirlines = async (req, res) => {
-  try{
-    const pathImage = req.file.path
+  try {
+    const pathImage = req.file.path;
     const pictureData = await cloudinary.uploader.upload(pathImage, {
-      folder: 'Airlines',
-    })
+      folder: 'Airlines'
+    });
     await createAirline({
       ...req.body,
       airline_logo: pictureData.secure_url

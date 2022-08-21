@@ -1,7 +1,7 @@
 const profileRoutes = require('express').Router();
 const urlencoded = require('body-parser').urlencoded({ extended: false });
 const { asyncHandler } = require('../app/middlewares/asyncHandler');
-const { UploadProfile} = require("../app/middlewares/multer")
+const { UploadProfile } = require('../app/middlewares/multer');
 const { getProfile, editProfile, getBookings, getDetailBooking, rateFlight, getReviews } = require('../app/controllers/userController');
 
 profileRoutes.get('/:userId', asyncHandler(getProfile))

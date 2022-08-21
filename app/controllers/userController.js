@@ -27,10 +27,10 @@ const getProfile = async (req, res) => {
 const editProfile = async (req, res) => {
   const { userId } = req.params;
   const { email, phoneNumber, name, city, country, postCode, role } = req.body;
-  const pathImage = req.file.path
-    const pictureData = await cloudinary.uploader.upload(pathImage, {
-      folder: 'Profile',
-    })
+  const pathImage = req.file.path;
+  const pictureData = await cloudinary.uploader.upload(pathImage, {
+    folder: 'Profile'
+  });
   const profilePictureUrl = pictureData.secure_url;
   const profilePictureId = pictureData.public_id;
 
@@ -99,7 +99,9 @@ const getBookings = async (req, res) => {
     airlineName: item?.airline_name,
     airlineLogo: item?.airline_logo,
     airlinePic: item?.airline_pic,
-    airlinePicPhoneNumber: item?.airline_pic_phone_number
+    airlinePicPhoneNumber: item?.airline_pic_phone_number,
+    paymentUrl: item?.payment_url,
+    paymentId: item?.payment_id
   }));
 
   res.status(200).send(bookingsInformation);
@@ -141,7 +143,9 @@ const getDetailBooking = async (req, res) => {
     airlineName: item?.airline_name,
     airlineLogo: item?.airline_logo,
     airlinePic: item?.airline_pic,
-    airlinePicPhoneNumber: item?.airline_pic_phone_number
+    airlinePicPhoneNumber: item?.airline_pic_phone_number,
+    paymentUrl: item?.payment_url,
+    paymentId: item?.payment_id
   }));
   res.status(200).send(detailBookingInformation?.[0]);
 };

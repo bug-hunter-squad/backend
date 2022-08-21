@@ -1,6 +1,6 @@
 const airlineRoutes = require('express').Router();
 const urlencoded = require('body-parser').urlencoded({ extended: false });
-const {UploadAirlines} = require('../app/middlewares/multer')
+const { UploadAirlines } = require('../app/middlewares/multer');
 
 const {
   getAirline,

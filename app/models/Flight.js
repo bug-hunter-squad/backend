@@ -27,7 +27,7 @@ const getFlightInformationById = (id) => {
 
 const getDetailFlightInformation = (id) => {
   return new Promise((resolve, reject) => {
-    db.query(`SELECT flights.*, flights.id as flight_id FROM flights FULL OUTER JOIN airlines ON flights.airline_id = airlines.id WHERE flights.id = ${id} ORDER BY flights.id DESC`, (error, result) => {
+    db.query(`SELECT flights.*, flights.id as flight_id, airlines.* FROM flights FULL OUTER JOIN airlines ON flights.airline_id = airlines.id WHERE flights.id = ${id} ORDER BY flights.id DESC`, (error, result) => {
       if (error) {
         reject(error);
       } else {
@@ -161,13 +161,24 @@ const flightDetailModel = (requestData) => {
 const flightBookingModel = (requestData) => {
   return new Promise((resolve, reject) => {
     db.query(`INSERT INTO bookings(user_id, flight_id, booking_status, booking_date, total_child_passenger, total_adult_passenger, flight_class, total_price)
-    VALUES ($1, $2, 'waiting', $3, $4, $5, $6, $7)`,
+    VALUES ($1, $2, 'waiting', $3, $4, $5, $6, $7) RETURNING *`,
     [requestData?.userId, requestData?.flightId, requestData?.bookingDate, requestData?.totalChildPassenger, requestData?.totalAdultPassenger, requestData?.flightClass, requestData?.totalPrice],
     (error, result) => {
       if (error) return reject(error);
       resolve(result);
     }
     );
+  });
+};
+
+const flightBookingPaymentModel = (requestData) => {
+  return new Promise((resolve, reject) => {
+    db.query('UPDATE bookings SET payment_id=$1, payment_token=$2, payment_url=$3 WHERE id=$4',
+      [requestData?.paymentId, requestData?.paymentToken, requestData?.paymentUrl, requestData?.bookingId],
+      (error, result) => {
+        if (error) return reject(error);
+        resolve(result);
+      });
   });
 };
 
@@ -180,5 +191,6 @@ module.exports = {
   deleteFlightInformation,
   flightFilterModel,
   flightDetailModel,
-  flightBookingModel
+  flightBookingModel,
+  flightBookingPaymentModel
 };
