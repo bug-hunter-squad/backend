@@ -95,7 +95,9 @@ const getBookings = async (req, res) => {
     airlineName: item?.airline_name,
     airlineLogo: item?.airline_logo,
     airlinePic: item?.airline_pic,
-    airlinePicPhoneNumber: item?.airline_pic_phone_number
+    airlinePicPhoneNumber: item?.airline_pic_phone_number,
+    paymentUrl: item?.payment_url,
+    paymentId: item?.payment_id
   }));
 
   res.status(200).send(bookingsInformation);
@@ -137,7 +139,9 @@ const getDetailBooking = async (req, res) => {
     airlineName: item?.airline_name,
     airlineLogo: item?.airline_logo,
     airlinePic: item?.airline_pic,
-    airlinePicPhoneNumber: item?.airline_pic_phone_number
+    airlinePicPhoneNumber: item?.airline_pic_phone_number,
+    paymentUrl: item?.payment_url,
+    paymentId: item?.payment_id
   }));
   res.status(200).send(detailBookingInformation?.[0]);
 };
