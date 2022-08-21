@@ -9,12 +9,12 @@ const notifications = async (req, res) => {
     await flightBookingStatusModel({ inputStatus, orderId });
   }
 
-  if (transactionStatus === 'expire ') {
+  if (transactionStatus === 'expire') {
     inputStatus = 'issued';
     await flightBookingStatusModel({ inputStatus, orderId });
   }
 
-  if (transactionStatus === 'settlement ') {
+  if (transactionStatus === 'settlement') {
     inputStatus = 'paid';
     await flightBookingStatusModel({ inputStatus, orderId });
   }
