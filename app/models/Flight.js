@@ -182,6 +182,18 @@ const flightBookingPaymentModel = (requestData) => {
   });
 };
 
+const flightBookingStatusModel = (requestData) => {
+  return new Promise((resolve, reject) => {
+    db.query('UPDATE bookings SET booking_status=$1 WHERE payment_id=$2',
+      [requestData?.inputStatus, requestData?.orderId],
+      (error, result) => {
+        if (error) return reject(error);
+        if (!result?.rowCount) return reject(new ErrorResponse('Missing payment credentials!'));
+        resolve(result);
+      });
+  });
+};
+
 module.exports = {
   getFlightsInformation,
   getFlightInformationById,
@@ -192,5 +204,6 @@ module.exports = {
   flightFilterModel,
   flightDetailModel,
   flightBookingModel,
-  flightBookingPaymentModel
+  flightBookingPaymentModel,
+  flightBookingStatusModel
 };

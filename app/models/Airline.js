@@ -7,7 +7,7 @@ const getAirlineById = (requestData) => {
             WHERE id=$1`,
       [requestData.airlinesId],
       (error, result) => {
-        if (error) return reject(error);
+        if (error) reject(error);
         resolve(result);
       }
     );

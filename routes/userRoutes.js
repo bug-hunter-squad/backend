@@ -5,7 +5,7 @@ const { UploadProfile } = require('../app/middlewares/multer');
 const { getProfile, editProfile, getBookings, getDetailBooking, rateFlight, getReviews } = require('../app/controllers/userController');
 
 profileRoutes.get('/:userId', asyncHandler(getProfile))
-  .patch('/:userId', UploadProfile, editProfile);
+  .patch('/:userId', UploadProfile, asyncHandler(editProfile));
 
 profileRoutes.get('/:userId/booking', asyncHandler(getBookings));
 profileRoutes.get('/:userId/booking/:bookingId', asyncHandler(getDetailBooking));
