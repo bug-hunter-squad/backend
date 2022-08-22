@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 app.use('/public', express.static('public'));
 
 // cors
-const allowlist = ['http://localhost:3000', 'http://localhost:3001', "https://client-bug-hunter.vercel.app/"];
+const allowlist = ['http://localhost:3000',"https://client-bug-hunter.vercel.app"];
 const corsOptionsDelegate = function (req, callback) {
   let corsOptions;
   if (allowlist.indexOf(req.header('Origin')) !== -1) {
