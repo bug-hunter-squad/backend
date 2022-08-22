@@ -11,7 +11,7 @@ const {
 
 airlineRoutes.get('/', getAirline);
 airlineRoutes.post('/', urlencoded, UploadAirlines, createAirlines);
-airlineRoutes.patch('/:airlinesId', editAirlines);
+airlineRoutes.patch('/:airlinesId', UploadAirlines, editAirlines);
 airlineRoutes.delete('/:airlinesId', deleteAirlines);
 
 module.exports = airlineRoutes;

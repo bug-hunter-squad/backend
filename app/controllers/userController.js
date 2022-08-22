@@ -28,17 +28,18 @@ const editProfile = async (req, res) => {
   const { userId } = req.params;
   const { email, phoneNumber, name, city, country, postCode, role } = req.body;
   const pathImage = req?.file?.path;
-  const pictureData = await cloudinary.uploader.upload(pathImage, {
-    folder: 'Profile'
-  });
-  const profilePictureUrl = pictureData.secure_url;
-  const profilePictureId = pictureData.public_id;
+  let profilePictureUrl;
+  let profilePictureId;
 
   const responseGetUser = await getUserById({ userId });
   const currentUserData = responseGetUser?.rows?.[0];
 
-  const profilePictureChecker = profilePictureUrl && profilePictureId && currentUserData?.profile_picture_id;
-  if (profilePictureChecker) await cloudinary.uploader.destroy(currentUserData?.profile_picture_id);
+  if (pathImage) {
+    if (currentUserData?.profile_picture_id) await cloudinary.uploader.destroy(currentUserData?.profile_picture_id);
+    const pictureData = await cloudinary.uploader.upload(pathImage, { folder: 'Profile' });
+    profilePictureUrl = pictureData.secure_url;
+    profilePictureId = pictureData.public_id;
+  }
 
   const dataToSend = {
     id: userId,
