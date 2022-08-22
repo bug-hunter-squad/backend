@@ -11,6 +11,10 @@ const notifications = async (req, res) => {
     await flightBookingStatusModel({ inputStatus: 'paid', orderId });
   }
 
+  if (transactionStatus === 'cancel') {
+    await flightBookingStatusModel({ inputStatus: 'canceled', orderId });
+  }
+
   res.status(200).send('Payment status updated');
 };
 
