@@ -1,7 +1,8 @@
 /* eslint-disable camelcase */
+const cloudinary = require('../../utils/couldinary');
+const { snap } = require('../../configs/payment');
 const { getUserById, editProfileModel, getAllBookingsModel, getDetailBookingModel, rateFlightModel, getFlightReviewsModel } = require('../models/User');
 const { flightTimeConverter, timestampConverter } = require('../../utils/timeConverter');
-const cloudinary = require('../../utils/couldinary');
 const { ErrorResponse } = require('../../utils/errorResponse');
 
 const getProfile = async (req, res) => {
@@ -209,4 +210,14 @@ const getReviews = async (req, res) => {
   res.status(200).send(flightReviewsInformation);
 };
 
-module.exports = { getProfile, editProfile, getBookings, getDetailBooking, rateFlight, getReviews };
+const bookingCancel = async (req, res) => {
+  const { userId, bookingId } = req.params;
+
+  const detailBookingResponse = await getDetailBookingModel({ bookingId, userId });
+  const paymentId = detailBookingResponse?.rows?.[0]?.payment_id;
+  await snap.transaction.cancel(paymentId);
+
+  res.status(200).send({ message: 'Transaction cancelled!' });
+};
+
+module.exports = { getProfile, editProfile, getBookings, getDetailBooking, rateFlight, getReviews, bookingCancel };
