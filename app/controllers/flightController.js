@@ -328,7 +328,7 @@ const flightBooking = async (req, res) => {
   await getDetailBookingModel({ bookingId: bookingData?.id, userId });
   await flightBookingPaymentModel(requestData);
 
-  res.status(200).send({ message: 'Flight booking successful!' });
+  res.status(200).send({ message: "Booking Success"});
 };
 
 module.exports = {
