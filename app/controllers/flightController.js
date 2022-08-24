@@ -69,7 +69,6 @@ const getDetailFlightsInformation = async (req, res) => {
     const getData = await getDetailFlightInformation(id);
     const detailFlightData = getData?.rows?.map((item) => ({
       flight_id: item?.flight_id,
-      airline_id: item?.airline_id,
       original: item?.original,
       destination: item?.destination,
       terminal: item?.terminal,
@@ -77,11 +76,16 @@ const getDetailFlightsInformation = async (req, res) => {
       price: item?.price,
       total_child_ticket: item?.total_child_ticket,
       total_adult_ticket: item?.total_adult_ticket,
-      departure_time: item?.departure_time,
-      arrival_time: item?.arrival_time,
+      departure_time: timestampConverter(item?.departure_time),
+      arrival_time: timestampConverter(item?.arrival_time),
       wifi: item?.wifi,
       meal: item?.meal,
-      luggage: item?.luggage
+      luggage: item?.luggage,
+      airline_id: item?.airline_id,
+      airline_name: item?.airline_name,
+      aieline_logo: item?.airline_logo,
+      airline_pic: item?.airline_pic,
+      airline_pic_phone_number: item?.airline_pic_phone_number
     }));
 
     res.status(200).json({
@@ -328,7 +332,7 @@ const flightBooking = async (req, res) => {
   await getDetailBookingModel({ bookingId: bookingData?.id, userId });
   await flightBookingPaymentModel(requestData);
 
-  res.status(200).send({ message: "Booking Success"});
+  res.status(200).send({ message: 'Booking Success' });
 };
 
 module.exports = {
