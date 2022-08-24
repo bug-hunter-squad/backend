@@ -27,7 +27,16 @@ const getFlightInformationById = (id) => {
 
 const getDetailFlightInformation = (id) => {
   return new Promise((resolve, reject) => {
-    db.query(`SELECT flights.*, flights.id as flight_id, airlines.* FROM flights FULL OUTER JOIN airlines ON flights.airline_id = airlines.id WHERE flights.id = ${id} ORDER BY flights.id DESC`, (error, result) => {
+    db.query(`SELECT flights.*, flights.id as flight_id, airlines.*, 
+    original.city as original_city, original.country as original_country, original.country_img_url as original_image,
+    destination.city as destination_city, destination.country as destination_country, destination.country_img_url as destination_image
+    FROM flights 
+    FULL OUTER JOIN airlines ON flights.airline_id = airlines.id 
+    JOIN flight_countries as original
+    ON flights.original = original.id
+    JOIN flight_countries as destination
+    ON flights.destination = destination.id
+    WHERE flights.id = ${id} ORDER BY flights.id DESC`, (error, result) => {
       if (error) {
         reject(error);
       } else {
@@ -116,28 +125,34 @@ const flightFilterModel = (requestData) => {
   if (requestData?.flightClass === 'first class') conditionalPrice = 'AND (flights.price * 2) >= $8 AND (flights.price * 2) <= $9';
   return new Promise((resolve, reject) => {
     db.query(`SELECT flights.id as flight_id, flights.*, airlines.*, 
-    to_timestamp(EXTRACT(EPOCH FROM flights.arrival_time) - EXTRACT(EPOCH FROM flights.departure_time)) as flight_time 
+    original.city as original_city, original.country as original_country, original.country_img_url as original_image,
+    destination.city as destination_city, destination.country as destination_country, destination.country_img_url as destination_image,
+    to_timestamp(EXTRACT(EPOCH FROM flights.arrival_time) - EXTRACT(EPOCH FROM flights.departure_time)) as flight_time
     FROM flights 
     JOIN airlines
     ON flights.airline_id = airlines.id 
+    JOIN flight_countries as original
+    ON flights.original = original.id
+    JOIN flight_countries as destination
+    ON flights.destination = destination.id
     WHERE 
-    LOWER(flights.original) LIKE LOWER($1) 
-    AND LOWER(flights.destination) LIKE LOWER($2)
+    flights.original =$1
+    AND flights.destination=$2
     AND (flights.total_child_ticket >= $3 )
     AND (flights.total_adult_ticket >= $4 )
     AND (flights.luggage=$5 OR flights.meal=$6 OR flights.wifi=$7)
     ${conditionalPrice}
     ORDER BY flights.id`,
     [
-        `%${requestData?.original}%`,
-        `%${requestData?.destination}%`,
-        requestData?.childPassenger,
-        requestData?.adultPassenger,
-        requestData?.luggage,
-        requestData?.meal,
-        requestData?.wifi,
-        requestData?.minPrice,
-        requestData?.maxPrice
+      requestData?.originalId,
+      requestData?.destinationId,
+      requestData?.childPassenger,
+      requestData?.adultPassenger,
+      requestData?.luggage,
+      requestData?.meal,
+      requestData?.wifi,
+      requestData?.minPrice,
+      requestData?.maxPrice
     ],
     (error, result) => {
       if (error) return reject(error);

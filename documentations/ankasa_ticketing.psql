@@ -138,7 +138,10 @@ CREATE TABLE public.bookings (
     total_adult_passenger integer,
     flight_class public.flight_class NOT NULL,
     total_price integer,
-    rating integer
+    rating integer,
+    payment_token text,
+    payment_url text,
+    payment_id text
 );
 
 
@@ -167,14 +170,51 @@ ALTER SEQUENCE public.bookings_id_seq OWNED BY public.bookings.id;
 
 
 --
+-- Name: flight_countries; Type: TABLE; Schema: public; Owner: nocturndev
+--
+
+CREATE TABLE public.flight_countries (
+    id integer NOT NULL,
+    city character varying,
+    country character varying,
+    country_img_url text,
+    country_img_url_id text
+);
+
+
+ALTER TABLE public.flight_countries OWNER TO nocturndev;
+
+--
+-- Name: flight_countries_id_seq; Type: SEQUENCE; Schema: public; Owner: nocturndev
+--
+
+CREATE SEQUENCE public.flight_countries_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.flight_countries_id_seq OWNER TO nocturndev;
+
+--
+-- Name: flight_countries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: nocturndev
+--
+
+ALTER SEQUENCE public.flight_countries_id_seq OWNED BY public.flight_countries.id;
+
+
+--
 -- Name: flights; Type: TABLE; Schema: public; Owner: nocturndev
 --
 
 CREATE TABLE public.flights (
     id integer NOT NULL,
     airline_id integer NOT NULL,
-    original character varying,
-    destination character varying,
+    original integer,
+    destination integer,
     gate character varying,
     price integer,
     total_child_ticket integer,
@@ -260,7 +300,9 @@ CREATE TABLE public.users (
     email character varying NOT NULL,
     password character varying NOT NULL,
     phone_number character varying(15),
-    role public.role NOT NULL
+    role public.role NOT NULL,
+    room text,
+    reset_password text
 );
 
 
@@ -310,6 +352,13 @@ ALTER TABLE ONLY public.bookings ALTER COLUMN id SET DEFAULT nextval('public.boo
 
 
 --
+-- Name: flight_countries id; Type: DEFAULT; Schema: public; Owner: nocturndev
+--
+
+ALTER TABLE ONLY public.flight_countries ALTER COLUMN id SET DEFAULT nextval('public.flight_countries_id_seq'::regclass);
+
+
+--
 -- Name: flights id; Type: DEFAULT; Schema: public; Owner: nocturndev
 --
 
@@ -328,11 +377,6 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 --
 
 COPY public.airlines (id, airline_name, airline_logo, airline_pic, airline_pic_phone_number, airline_status, airline_logo_id) FROM stdin;
-1	Air Asia	\N	Dadang	081313413062	active	\N
-3	Batik Air	\N	Conello	081297915965	active	\N
-4	Singapore Airlines	\N	Reonald	081324237941	active	
-5	Kenya Airways	\N	Arul	088762318493	active	\N
-6	Qatar Airlines	\N	Chev	0210038192	active	\N
 \.
 
 
@@ -348,22 +392,15 @@ COPY public.booking_tickets (id, booking_id, passenger_name, nationality) FROM s
 -- Data for Name: bookings; Type: TABLE DATA; Schema: public; Owner: nocturndev
 --
 
-COPY public.bookings (id, user_id, flight_id, booking_status, booking_date, total_child_passenger, total_adult_passenger, flight_class, total_price, rating) FROM stdin;
-5	2	3	waiting	2022-08-19 18:52:52.184+07	\N	\N	first class	\N	\N
-6	2	3	waiting	2022-08-19 19:00:28.768+07	\N	\N	economy	\N	\N
-7	2	3	waiting	2022-08-19 19:00:57.65+07	0	2	economy	\N	\N
-8	2	3	waiting	2022-08-19 19:05:56.048+07	0	2	economy	2500000	\N
-9	2	3	waiting	2022-08-19 19:50:24.548+07	1	2	economy	2500000	\N
-10	2	3	waiting	2022-08-19 19:51:37.811+07	1	2	first class	2500000	\N
-11	2	10	waiting	2022-08-19 21:00:40.752+07	1	2	first class	2500000	\N
-2	1	1	waiting	2022-08-19 18:47:15.668+07	2	2	first class	2500000	5
-1	1	1	waiting	2022-08-19 18:46:43.388+07	2	2	first class	2500000	5
-3	2	3	paid	2022-08-19 18:48:17.613+07	2	2	first class	2500000	\N
-12	1	4	paid	2022-08-20 01:00:09.32+07	1	2	first class	2500000	4
-13	3	6	waiting	2022-08-20 03:16:56.734+07	1	2	first class	2500000	\N
-16	3	3	paid	2022-08-20 03:43:56.338+07	1	2	first class	3000000	4
-15	3	6	paid	2022-08-20 03:24:10.499+07	1	2	first class	3000000	\N
-17	3	3	issued	2022-08-20 16:16:56.821+07	1	2	first class	3000000	\N
+COPY public.bookings (id, user_id, flight_id, booking_status, booking_date, total_child_passenger, total_adult_passenger, flight_class, total_price, rating, payment_token, payment_url, payment_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: flight_countries; Type: TABLE DATA; Schema: public; Owner: nocturndev
+--
+
+COPY public.flight_countries (id, city, country, country_img_url, country_img_url_id) FROM stdin;
 \.
 
 
@@ -372,18 +409,6 @@ COPY public.bookings (id, user_id, flight_id, booking_status, booking_date, tota
 --
 
 COPY public.flights (id, airline_id, original, destination, gate, price, total_child_ticket, total_adult_ticket, departure_time, arrival_time, wifi, meal, luggage, terminal) FROM stdin;
-1	1	Bandung	Tokyo	03	5000000	50	50	2022-08-20 10:00:00+07	2022-08-20 16:00:00+07	t	t	t	A
-2	3	Jakarta	Qatar	01	2500000	20	70	2022-08-20 05:00:00+07	2022-08-20 18:15:00+07	f	t	t	B
-3	1	Tokyo	Jakarta	01	3000000	30	50	2022-08-17 04:00:00+07	2022-08-17 09:00:00+07	f	f	t	A
-4	4	Jakarta	Tokyo	08	3500000	60	60	2022-08-17 20:00:00+07	2022-08-18 01:00:00+07	f	t	f	C
-5	3	Tokyo	Medan	01	4500000	30	45	2022-08-17 13:00:00+07	2022-08-17 18:00:00+07	t	t	t	F
-6	5	Kenya	Jakarta	02	3000000	50	60	2022-08-25 19:00:00+07	2022-08-26 02:00:00+07	t	t	f	C
-7	5	Jakarta	Kenya	01	3250000	20	100	2022-08-27 14:00:00+07	2022-08-27 23:45:00+07	t	t	f	D
-8	4	Bandung	Singapore	02	1500000	50	50	2022-08-21 07:00:00+07	2022-08-21 10:00:00+07	f	f	t	A
-9	4	Singapore	Jakarta	01	1250000	20	70	2022-08-23 10:00:00+07	2022-08-23 13:00:00+07	f	f	t	B
-10	4	Jakarta	Singapore	01	1750000	30	70	2022-08-23 12:00:00+07	2022-08-23 14:45:00+07	f	t	t	A
-11	6	Jakarta	Qatar	02	7000000	50	50	2022-08-23 21:00:00+07	2022-08-24 10:00:00+07	t	t	t	C
-12	6	Jakarta	Qatar	01	7000000	30	70	2022-08-23 07:00:00+07	2022-08-23 20:00:00+07	f	t	t	A
 \.
 
 
@@ -392,9 +417,6 @@ COPY public.flights (id, airline_id, original, destination, gate, price, total_c
 --
 
 COPY public.user_profiles (user_id, city, country, post_code, profile_picture, profile_picture_id) FROM stdin;
-1	Los Angeles	USA	90001	https://res.cloudinary.com/dwg17vn35/image/upload/v1660844189/zqpibbcndc4gbb2rcd87.jpg	zqpibbcndc4gbb2rcd87
-2	Cimahi	Indonesia	40511	https://res.cloudinary.com/dwg17vn35/image/upload/v1660845413/oqhzvvyqdohud0yhs0fu.jpg	oqhzvvyqdohud0yhs0fu
-3	Bandung	Indonesia	40211	https://res.cloudinary.com/dwg17vn35/image/upload/v1660947608/yekag12aidsxwgygx1db.jpg	yekag12aidsxwgygx1db
 \.
 
 
@@ -402,10 +424,7 @@ COPY public.user_profiles (user_id, city, country, post_code, profile_picture, p
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: nocturndev
 --
 
-COPY public.users (id, name, email, password, phone_number, role) FROM stdin;
-1	Xavier Chev Havier	xavierhavier@gmail.com	$2b$10$UrVDv7YYZOUCiLDf15UPA.EKSy.fz7rlKg5QSQBzICI/PrVupKEvC	3194211685	customer
-2	Mikhael Kevin Lubis	mikhaelkevinlubis@gmail.com	$2b$10$Q/zSZ46orNtlSsAyEp46buCyifLzgrgDq1BW9gbkAHwOUCYXbYKqy	081297915965	customer
-3	Donald Wackey	donaldwackey@gmail.com	$2b$10$3zgSiopLIAnFja9ke46T2OMgR4F0jjEOnydMhmjb1XnIlRXyUZkjS	081297915123	customer
+COPY public.users (id, name, email, password, phone_number, role, room, reset_password) FROM stdin;
 \.
 
 
@@ -413,21 +432,28 @@ COPY public.users (id, name, email, password, phone_number, role) FROM stdin;
 -- Name: airlines_id_seq; Type: SEQUENCE SET; Schema: public; Owner: nocturndev
 --
 
-SELECT pg_catalog.setval('public.airlines_id_seq', 7, true);
+SELECT pg_catalog.setval('public.airlines_id_seq', 1, false);
 
 
 --
 -- Name: bookings_id_seq; Type: SEQUENCE SET; Schema: public; Owner: nocturndev
 --
 
-SELECT pg_catalog.setval('public.bookings_id_seq', 17, true);
+SELECT pg_catalog.setval('public.bookings_id_seq', 1, false);
+
+
+--
+-- Name: flight_countries_id_seq; Type: SEQUENCE SET; Schema: public; Owner: nocturndev
+--
+
+SELECT pg_catalog.setval('public.flight_countries_id_seq', 1, false);
 
 
 --
 -- Name: flights_id_seq; Type: SEQUENCE SET; Schema: public; Owner: nocturndev
 --
 
-SELECT pg_catalog.setval('public.flights_id_seq', 12, true);
+SELECT pg_catalog.setval('public.flights_id_seq', 1, false);
 
 
 --
@@ -441,7 +467,7 @@ SELECT pg_catalog.setval('public.tickets_id_seq', 1, false);
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: nocturndev
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 5, true);
+SELECT pg_catalog.setval('public.users_id_seq', 1, false);
 
 
 --
@@ -474,6 +500,22 @@ ALTER TABLE ONLY public.airlines
 
 ALTER TABLE ONLY public.bookings
     ADD CONSTRAINT bookings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: flight_countries flight_countries_city_key; Type: CONSTRAINT; Schema: public; Owner: nocturndev
+--
+
+ALTER TABLE ONLY public.flight_countries
+    ADD CONSTRAINT flight_countries_city_key UNIQUE (city);
+
+
+--
+-- Name: flight_countries flight_countries_pkey; Type: CONSTRAINT; Schema: public; Owner: nocturndev
+--
+
+ALTER TABLE ONLY public.flight_countries
+    ADD CONSTRAINT flight_countries_pkey PRIMARY KEY (id);
 
 
 --
@@ -533,11 +575,27 @@ ALTER TABLE ONLY public.booking_tickets
 
 
 --
+-- Name: flights fk_destination; Type: FK CONSTRAINT; Schema: public; Owner: nocturndev
+--
+
+ALTER TABLE ONLY public.flights
+    ADD CONSTRAINT fk_destination FOREIGN KEY (destination) REFERENCES public.flight_countries(id);
+
+
+--
 -- Name: bookings fk_flight_id; Type: FK CONSTRAINT; Schema: public; Owner: nocturndev
 --
 
 ALTER TABLE ONLY public.bookings
     ADD CONSTRAINT fk_flight_id FOREIGN KEY (flight_id) REFERENCES public.flights(id);
+
+
+--
+-- Name: flights fk_original; Type: FK CONSTRAINT; Schema: public; Owner: nocturndev
+--
+
+ALTER TABLE ONLY public.flights
+    ADD CONSTRAINT fk_original FOREIGN KEY (original) REFERENCES public.flight_countries(id);
 
 
 --

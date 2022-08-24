@@ -16,6 +16,7 @@ const {
   flightBookingPaymentModel
 } = require('../models/Flight');
 const { getAirlineById } = require('../models/Airline');
+const { getCountryModel } = require('../models/Country');
 
 const getAllFlights = async (req, res) => {
   try {
@@ -51,11 +52,16 @@ const getFlightsInformationById = async (req, res) => {
 
 const createFlightsInformation = async (req, res) => {
   try {
-    const { airline_id: airlinesId } = req.body;
+    const { airline_id: airlinesId, originalId, destinationId } = req.body;
     const getAirlineData = await getAirlineById({ airlinesId });
     if (!getAirlineData?.rowCount) return res.status(404).send('Airline not found!');
 
-    await createFlightInformation({ ...req.body });
+    if (originalId === destinationId) return res.status(422).send('Original and destination should be different!');
+    await Promise.all([originalId, destinationId]?.map(async (item) => {
+      await getCountryModel({ countryId: item });
+    }));
+
+    await createFlightInformation({ ...req.body, original: originalId, destination: destinationId });
     res.status(200).send('Success create flight information');
   } catch (error) {
     console.log('error', error);
@@ -67,10 +73,17 @@ const getDetailFlightsInformation = async (req, res) => {
   try {
     const { id } = req.params;
     const getData = await getDetailFlightInformation(id);
+
     const detailFlightData = getData?.rows?.map((item) => ({
       flight_id: item?.flight_id,
       original: item?.original,
+      original_city: item?.original_city,
+      original_country: item?.original_country,
+      original_image: item?.original_image,
       destination: item?.destination,
+      destination_city: item?.destination_city,
+      destination_country: item?.destination_country,
+      destination_image: item?.destination_image,
       terminal: item?.terminal,
       gate: item?.gate,
       price: item?.price,
@@ -101,17 +114,26 @@ const getDetailFlightsInformation = async (req, res) => {
 const editFlightsInformation = async (req, res) => {
   try {
     const { flightId } = req.params;
-    const { airline_id, original, destination, gate, terminal, price, total_child_ticket, total_adult_ticket, departure_time, arrival_time, wifi, meal, luggage } = req?.body;
+    const { airline_id, originalId, destinationId, gate, terminal, price, total_child_ticket, total_adult_ticket, departure_time, arrival_time, wifi, meal, luggage } = req?.body;
 
     const flightChecker = await getFlightInformationById(flightId);
     if (!flightChecker?.rowCount) return res.status(404).send('Flight not found!');
-
     const flightData = flightChecker?.rows?.[0];
+
+    if (originalId === destinationId) throw new ErrorResponse('Original and destination flight cannot be the same!', 404);
+    await Promise.all([originalId, destinationId]?.map(async (item, index) => {
+      try {
+        await getCountryModel({ countryId: item });
+      } catch (error) {
+        if (index === 0) throw new ErrorResponse('Flight original not found!', 404);
+        throw new ErrorResponse('Flight destination not found!', 404);
+      }
+    }));
 
     const requestData = {
       airline_id: airline_id || flightData?.airline_id,
-      original: original || flightData?.original,
-      destination: destination || flightData?.destination,
+      original: originalId || flightData?.original,
+      destination: destinationId || flightData?.destination,
       gate: gate || flightData?.gate,
       terminal: terminal || flightData?.terminal,
       price: price || flightData?.price,
@@ -124,11 +146,13 @@ const editFlightsInformation = async (req, res) => {
       luggage: luggage || flightData?.luggage
     };
 
+    const airlineChecker = await getAirlineById({ airlinesId: requestData?.airline_id });
+    if (!airlineChecker.rowCount) return res.status(404).send('Airline not found!');
+
     await editFlightInformation(flightId, requestData);
-    res.status(200).send('Success edit airline');
+    res.status(200).send('Success edit flight!');
   } catch (error) {
-    console.log('error', error);
-    res.status(400).send('Something went wrong!');
+    res.status(error?.status || 500).send(error?.message || 'Something went wrong!');
   }
 };
 
@@ -156,8 +180,8 @@ const deletedFlightInformation = async (req, res) => {
 
 const searchFilterFlight = async (req, res) => {
   let {
-    original,
-    destination,
+    originalId,
+    destinationId,
     flightClass,
     wifi,
     meal,
@@ -171,9 +195,18 @@ const searchFilterFlight = async (req, res) => {
     arrivalTime
   } = req.query;
 
+  if (!originalId || !destinationId) throw new ErrorResponse('Please select original and destination flight!');
+  if (originalId === destinationId) throw new ErrorResponse('Please select different place between original and destination flight!');
+  await Promise.all([originalId, destinationId]?.map(async (item, index) => {
+    try {
+      await getCountryModel({ countryId: item });
+    } catch (error) {
+      if (index === 0) throw new ErrorResponse('Flight original not found!', 404);
+      throw new ErrorResponse('Flight destination not found!', 404);
+    }
+  }));
+
   // Default value for filtering
-  original = original || '';
-  destination = destination || '';
   flightClass = flightClass || 'economy';
   childPassenger = childPassenger || 0;
   adultPassenger = adultPassenger || 0;
@@ -192,8 +225,8 @@ const searchFilterFlight = async (req, res) => {
   if (minPrice > maxPrice) throw new ErrorResponse('Max price should be greater than max price!', 422);
 
   const requestData = {
-    original,
-    destination,
+    originalId,
+    destinationId,
     flightClass,
     childPassenger,
     adultPassenger,
@@ -216,8 +249,14 @@ const searchFilterFlight = async (req, res) => {
 
   let flightInformation = tempFlightInformation?.map(item => ({
     flightId: item?.flight_id,
-    flightOriginal: item?.original,
-    flightDestination: item?.destination,
+    flightOriginalId: item?.original,
+    flightOriginalCity: item?.original_city,
+    flightOriginalCountry: item?.original_country,
+    flightOriginalImage: item?.original_image,
+    flightDestinationId: item?.destination,
+    flightDestinationCity: item?.destination_city,
+    flightDestinationCountry: item?.destination_country,
+    flightDestinationImage: item?.destination_image,
     flightTerminal: item?.terminal,
     flightGate: item?.gate,
     flightDeparture: item?.departure_time,
