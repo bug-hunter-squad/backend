@@ -38,3 +38,9 @@ exports.UploadProfile = multer({
   fileFilter: fileFilterImages,
   limits: { fileSize: 1 * 1024 * 1024 }
 }).single('profilePicture');
+
+exports.UploadCountry = multer({
+  storage: AirlineStorage,
+  fileFilter: fileFilterImages,
+  limits: { fileSize: 1 * 1024 * 1024 }
+}).single('countryImage');
