@@ -33,6 +33,7 @@ const userRoutes = require('./routes/userRoutes');
 const airlineRoutes = require('./routes/airlineRoutes');
 const flightRoutes = require('./routes/flightRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
+const countryRoutes = require('./routes/countryRoutes');
 
 // PUBLIC ROUTES
 app.use('/auth', authRoutes);
@@ -40,6 +41,7 @@ app.use('/profile', userRoutes);
 app.use('/airlines', airlineRoutes);
 app.use('/flight', flightRoutes);
 app.use('/payment', paymentRoutes);
+app.use('/country', countryRoutes);
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
