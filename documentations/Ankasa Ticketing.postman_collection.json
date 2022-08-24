@@ -1,0 +1,1128 @@
+{
+	"info": {
+		"_postman_id": "ea8c16a4-b758-46b5-a550-5437eeb3c60c",
+		"name": "Ankasa Ticketing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22931710"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Acong",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "acong@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "1234",
+									"type": "text"
+								},
+								{
+									"key": "role",
+									"value": "customer",
+									"description": "default value = customer",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/register",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "acong@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "1234",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Flight",
+			"item": [
+				{
+					"name": "Airlines",
+					"item": [
+						{
+							"name": "Add Airline",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "airline_name",
+											"value": "Air Asia",
+											"type": "text"
+										},
+										{
+											"key": "airline_logo",
+											"type": "file",
+											"src": "/D:/Kevin/Kerja/Pijar Camp/Course/Hardskills/Project/Ankasa Ticketing/documentations/images/AirAsia_New_Logo.png"
+										},
+										{
+											"key": "airline_pic",
+											"value": "Mark",
+											"type": "text"
+										},
+										{
+											"key": "airline_pic_phone_number",
+											"value": "081297915965",
+											"type": "text"
+										},
+										{
+											"key": "airline_status",
+											"value": "active",
+											"description": "enum('active','deactive')",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseURL}}/airlines",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"airlines"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Airline",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "airline_name",
+											"value": "Air Asia",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "airline_logo",
+											"type": "file",
+											"src": "/D:/Kevin/Kerja/Pijar Camp/Course/Hardskills/Project/Ankasa Ticketing/documentations/images/AirAsia_New_Logo.png",
+											"disabled": true
+										},
+										{
+											"key": "airline_pic",
+											"value": "Nanang NSL Juga",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "airline_pic_phone_number",
+											"value": "817-833-40601",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "airline_status",
+											"value": "active",
+											"description": "enum('active','deactive')",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseURL}}/airlines/:airlinesId",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"airlines",
+										":airlinesId"
+									],
+									"variable": [
+										{
+											"key": "airlinesId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Airlines",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/airlines",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"airlines"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Airline",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/airlines/:airlinesId",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"airlines",
+										":airlinesId"
+									],
+									"variable": [
+										{
+											"key": "airlinesId",
+											"value": "8"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Flight Information",
+					"item": [
+						{
+							"name": "Add Flight Information",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "airline_id",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "originalId",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "destinationId",
+											"value": "3",
+											"type": "text"
+										},
+										{
+											"key": "gate",
+											"value": "A",
+											"type": "text"
+										},
+										{
+											"key": "terminal",
+											"value": "01",
+											"type": "text"
+										},
+										{
+											"key": "price",
+											"value": "7500000",
+											"type": "text"
+										},
+										{
+											"key": "total_child_ticket",
+											"value": "50",
+											"type": "text"
+										},
+										{
+											"key": "total_adult_ticket",
+											"value": "100",
+											"type": "text"
+										},
+										{
+											"key": "departure_time",
+											"value": "2022-08-24T00:00+7",
+											"type": "text"
+										},
+										{
+											"key": "arrival_time",
+											"value": "2022-08-25T05:00+7",
+											"type": "text"
+										},
+										{
+											"key": "wifi",
+											"value": "f",
+											"description": "boolean",
+											"type": "text"
+										},
+										{
+											"key": "meal",
+											"value": "t",
+											"description": "boolean",
+											"type": "text"
+										},
+										{
+											"key": "luggage",
+											"value": "t",
+											"description": "boolean",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseURL}}/flight",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"flight"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Flight Information",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "airline_id",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "originalId",
+											"value": "4",
+											"type": "text"
+										},
+										{
+											"key": "destinationId",
+											"value": "2",
+											"type": "text"
+										},
+										{
+											"key": "gate",
+											"value": "03",
+											"type": "text"
+										},
+										{
+											"key": "terminal",
+											"value": "C",
+											"type": "text"
+										},
+										{
+											"key": "price",
+											"value": "1250000",
+											"type": "text"
+										},
+										{
+											"key": "total_child_ticket",
+											"value": "30",
+											"type": "text"
+										},
+										{
+											"key": "total_adult_ticket",
+											"value": "60",
+											"type": "text"
+										},
+										{
+											"key": "departure_time",
+											"value": "2022-08-28T13:00+7",
+											"type": "text"
+										},
+										{
+											"key": "arrival_time",
+											"value": "2022-08-28T20:00+7",
+											"type": "text"
+										},
+										{
+											"key": "wifi",
+											"value": "true",
+											"description": "boolean",
+											"type": "text"
+										},
+										{
+											"key": "meal",
+											"value": "true",
+											"description": "boolean",
+											"type": "text"
+										},
+										{
+											"key": "luggage",
+											"value": "false",
+											"description": "boolean",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseURL}}/flight/:flightId",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"flight",
+										":flightId"
+									],
+									"variable": [
+										{
+											"key": "flightId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Flight Information",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/flight/:flightId",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"flight",
+										":flightId"
+									],
+									"variable": [
+										{
+											"key": "flightId",
+											"value": "17"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Search Flight Information",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/flight?originalId=4&destinationId=2&departureDate=2022-08-28&childPassenger=1&adultPassenger=1",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"flight"
+									],
+									"query": [
+										{
+											"key": "originalId",
+											"value": "4",
+											"description": "ORIGINAL ID"
+										},
+										{
+											"key": "destinationId",
+											"value": "2",
+											"description": "DESTINATION ID"
+										},
+										{
+											"key": "departureDate",
+											"value": "2022-08-28",
+											"description": "'YYYY-MM-dd'"
+										},
+										{
+											"key": "departureTime",
+											"value": "[\"18:00-24:00\", \"06:00-11:59\"]",
+											"description": "INPUT AS STRING ARRAY! Click here to see example!\nPostman ex: [\"00:00 - 06:00\",\"06:00 - 12:00\"]\nFrontend ex: JSON.stringfy(array)",
+											"disabled": true
+										},
+										{
+											"key": "arrivalTime",
+											"value": "[\"06:00-11:59\",\"18:00-25:00\"]",
+											"description": "INPUT AS STRING ARRAY! Click here to see example!\nPostman ex: [\"00:00 - 06:00\",\"06:00 - 12:00\"]\nFrontend ex: JSON.stringfy(array)",
+											"disabled": true
+										},
+										{
+											"key": "childPassenger",
+											"value": "1"
+										},
+										{
+											"key": "adultPassenger",
+											"value": "1"
+										},
+										{
+											"key": "wifi",
+											"value": "true",
+											"description": "boolean",
+											"disabled": true
+										},
+										{
+											"key": "meal",
+											"value": "true",
+											"description": "boolean",
+											"disabled": true
+										},
+										{
+											"key": "luggage",
+											"value": "true",
+											"description": "boolean",
+											"disabled": true
+										},
+										{
+											"key": "minPrice",
+											"value": "10000000",
+											"disabled": true
+										},
+										{
+											"key": "maxPrice",
+											"value": "14000000",
+											"disabled": true
+										},
+										{
+											"key": "airlines",
+											"value": "[6,3]",
+											"description": "INPUT BY AIRLANE ID! Click here to see example!\nPostman ex: [1,2,3]\nFrontend ex: JSON.stringfy(array)",
+											"disabled": true
+										},
+										{
+											"key": "flightClass",
+											"value": "economy",
+											"description": "format: economy/business/first class",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Detail Flight Information",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/flight/:id",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"flight",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Countries",
+					"item": [
+						{
+							"name": "Add flight country",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "city",
+											"value": "New York City",
+											"type": "text"
+										},
+										{
+											"key": "country",
+											"value": "USA",
+											"type": "text"
+										},
+										{
+											"key": "countryImage",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseURL}}/country",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"country"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get flight countries",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/country",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"country"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit flight country",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "city",
+											"value": "Europe",
+											"type": "text"
+										},
+										{
+											"key": "country",
+											"value": "Europe",
+											"type": "text"
+										},
+										{
+											"key": "countryImage",
+											"type": "file",
+											"src": "/D:/Kevin/Kerja/Pijar Camp/Course/Hardskills/Project/Ankasa Ticketing/documentations/images/Air_Europa_Logo.png"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseURL}}/country/:countryId",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"country",
+										":countryId"
+									],
+									"variable": [
+										{
+											"key": "countryId",
+											"value": "7"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete flight country",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/country/:countryId",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"country",
+										":countryId"
+									],
+									"variable": [
+										{
+											"key": "countryId",
+											"value": "7"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Booking",
+					"item": [
+						{
+							"name": "Tickets",
+							"item": [
+								{
+									"name": "Passenger Tickets",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "title",
+													"value": "",
+													"type": "text"
+												},
+												{
+													"key": "passengerName",
+													"value": "",
+													"type": "text"
+												},
+												{
+													"key": "nationalty",
+													"value": "",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "https://localhost:8500/booking/:bookingId/tickets",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "8500",
+											"path": [
+												"booking",
+												":bookingId",
+												"tickets"
+											],
+											"variable": [
+												{
+													"key": "bookingId",
+													"value": null
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Tickets",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://localhost:8500/booking/:bookingId/tickets",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "8500",
+											"path": [
+												"booking",
+												":bookingId",
+												"tickets"
+											],
+											"variable": [
+												{
+													"key": "bookingId",
+													"value": null
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "My Review",
+							"item": [
+								{
+									"name": "Flight Rating",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "rating",
+													"value": "4",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{baseURL}}/profile/:userId/my-review/booking/:bookingId",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"profile",
+												":userId",
+												"my-review",
+												"booking",
+												":bookingId"
+											],
+											"variable": [
+												{
+													"key": "userId",
+													"value": "9"
+												},
+												{
+													"key": "bookingId",
+													"value": "32"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Flight Review",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseURL}}/profile/:userId/my-review",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"profile",
+												":userId",
+												"my-review"
+											],
+											"variable": [
+												{
+													"key": "userId",
+													"value": "9"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "My Booking",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/profile/:userId/booking",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"profile",
+										":userId",
+										"booking"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Detail Booking",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/profile/:userId/booking/:bookingId",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"profile",
+										":userId",
+										"booking",
+										":bookingId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "2"
+										},
+										{
+											"key": "bookingId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Booking",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "totalChildPassenger",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "totalAdultPassenger",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "flightClass",
+											"value": "economy",
+											"description": "economy/business/first class",
+											"type": "text"
+										},
+										{
+											"key": "totalPrice",
+											"value": "5625000",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseURL}}/flight/:flightId/booking/profile/:userId",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"flight",
+										":flightId",
+										"booking",
+										"profile",
+										":userId"
+									],
+									"variable": [
+										{
+											"key": "flightId",
+											"value": "1"
+										},
+										{
+											"key": "userId",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cancel Booking",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/profile/:userId/booking/:bookingId",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"profile",
+										":userId",
+										"booking",
+										":bookingId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "9"
+										},
+										{
+											"key": "bookingId",
+											"value": "35"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Profile",
+					"item": [
+						{
+							"name": "Get User By Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/profile/:userId",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"profile",
+										":userId"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": "",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "9"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Pofile",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "acong@gmail.com",
+											"type": "text"
+										},
+										{
+											"key": "phoneNumber",
+											"value": "085697915965",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "Acong",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "Cibeber",
+											"type": "text"
+										},
+										{
+											"key": "country",
+											"value": "Indonesia",
+											"type": "text"
+										},
+										{
+											"key": "postCode",
+											"value": "420193",
+											"type": "text"
+										},
+										{
+											"key": "profilePicture",
+											"type": "file",
+											"src": "/D:/Kevin/Kerja/Pijar Camp/Course/Hardskills/Project/Hire System/dokumentasi/Images/profilePicture2.jpg",
+											"disabled": true
+										},
+										{
+											"key": "role",
+											"value": "customer",
+											"description": "Untuk admin merubah role customer ke admin (pilihan role: customer/admin)",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseURL}}/profile/:userId",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"profile",
+										":userId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "9"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
