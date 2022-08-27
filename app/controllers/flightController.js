@@ -13,7 +13,8 @@ const {
   deleteFlightInformation,
   flightFilterModel,
   flightBookingModel,
-  flightBookingPaymentModel
+  flightBookingPaymentModel,
+  flightRating
 } = require('../models/Flight');
 const { getAirlineById } = require('../models/Airline');
 const { getCountryModel } = require('../models/Country');
@@ -374,6 +375,28 @@ const flightBooking = async (req, res) => {
   res.status(200).send({ message: 'Booking Success' });
 };
 
+const trendingDestination = async (req, res) => {
+  const getRatingResponse = await flightRating();
+  const ratingData = getRatingResponse?.rows;
+  const trendingDestination = ratingData?.map(item => ({
+    destinationId: item?.destinationid,
+    city: item?.city,
+    country: item?.country,
+    country_img_url: item?.country_img_url,
+    rating: Number(item?.rating).toFixed(1)
+  }));
+
+  const topTenTrending = ratingData?.map(item => ({
+    destinationId: item?.destinationid,
+    city: item?.city,
+    country: item?.country,
+    country_img_url: item?.country_img_url,
+    rating: Number(item?.rating).toFixed(1)
+  })).splice(0, 10);
+
+  res.status(200).send({ topTenTrending, trendingDestination });
+};
+
 module.exports = {
   getAllFlights,
   getFlightsInformationById,
@@ -382,5 +405,6 @@ module.exports = {
   editFlightsInformation,
   deletedFlightInformation,
   searchFilterFlight,
-  flightBooking
+  flightBooking,
+  trendingDestination
 };

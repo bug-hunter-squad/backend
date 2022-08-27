@@ -36,7 +36,8 @@ const getDetailFlightInformation = (id) => {
     ON flights.original = original.id
     JOIN flight_countries as destination
     ON flights.destination = destination.id
-    WHERE flights.id = ${id} ORDER BY flights.id DESC`, (error, result) => {
+    WHERE flights.id = ${id}
+    ORDER BY flights.id DESC`, (error, result) => {
       if (error) {
         reject(error);
       } else {
@@ -209,6 +210,23 @@ const flightBookingStatusModel = (requestData) => {
   });
 };
 
+const flightRating = (requestData) => {
+  return new Promise((resolve, reject) => {
+    db.query(`SELECT SUM(bookings.rating)::decimal/COUNT(bookings.rating) as rating, 
+    flights.destination as destinationId , flight_countries.city, flight_countries.country, flight_countries.country_img_url
+    FROM bookings
+    JOIN flights ON bookings.flight_id = flights.id
+    JOIN flight_countries ON flights.destination = flight_countries.id
+    WHERE bookings.rating IS NOT NULL
+    GROUP BY destinationId, flight_countries.city, flight_countries.country, flight_countries.country_img_url
+    ORDER BY rating DESC`,
+    (error, result) => {
+      if (error) return reject(error);
+      resolve(result);
+    });
+  });
+};
+
 module.exports = {
   getFlightsInformation,
   getFlightInformationById,
@@ -220,5 +238,6 @@ module.exports = {
   flightDetailModel,
   flightBookingModel,
   flightBookingPaymentModel,
-  flightBookingStatusModel
+  flightBookingStatusModel,
+  flightRating
 };
