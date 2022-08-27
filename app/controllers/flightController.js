@@ -96,7 +96,7 @@ const getDetailFlightsInformation = async (req, res) => {
       luggage: item?.luggage,
       airline_id: item?.airline_id,
       airline_name: item?.airline_name,
-      aieline_logo: item?.airline_logo,
+      airline_logo: item?.airline_logo,
       airline_pic: item?.airline_pic,
       airline_pic_phone_number: item?.airline_pic_phone_number
     }));
