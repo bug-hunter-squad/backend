@@ -74,6 +74,8 @@ const getDetailFlightsInformation = async (req, res) => {
   try {
     const { id } = req.params;
     const getData = await getDetailFlightInformation(id);
+    const getAllRating = await flightRating();
+    const ratingData = getAllRating?.rows?.filter(item => item?.destinationid === Number(id));
 
     const detailFlightData = getData?.rows?.map((item) => ({
       flight_id: item?.flight_id,
@@ -85,6 +87,7 @@ const getDetailFlightsInformation = async (req, res) => {
       destination_city: item?.destination_city,
       destination_country: item?.destination_country,
       destination_image: item?.destination_image,
+      rating: Number(ratingData?.[0]?.rating).toFixed(1),
       terminal: item?.terminal,
       gate: item?.gate,
       price: item?.price,
