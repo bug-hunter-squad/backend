@@ -7,14 +7,19 @@ const {
   editFlightsInformation,
   getDetailFlightsInformation,
   searchFilterFlight,
-  flightBooking
+  flightBooking,
+  trendingDestination
 } = require('../app/controllers/flightController');
 
-flightRoutes.get('/:id', getDetailFlightsInformation);
-flightRoutes.post('/', urlencoded, createFlightsInformation);
-flightRoutes.patch('/:flightId', urlencoded, editFlightsInformation);
-flightRoutes.delete('/:flightId', deletedFlightInformation);
-flightRoutes.get('/', asyncHandler(searchFilterFlight));
+flightRoutes.get('/trending', asyncHandler(trendingDestination));
+
+flightRoutes.post('/', urlencoded, createFlightsInformation)
+  .get('/', asyncHandler(searchFilterFlight));
+
+flightRoutes.patch('/:flightId', urlencoded, editFlightsInformation)
+  .delete('/:flightId', deletedFlightInformation)
+  .get('/:id', getDetailFlightsInformation); ;
+
 flightRoutes.post('/:flightId/booking/profile/:userId', urlencoded, asyncHandler(flightBooking));
 
 module.exports = flightRoutes;

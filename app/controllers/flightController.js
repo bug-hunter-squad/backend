@@ -13,7 +13,8 @@ const {
   deleteFlightInformation,
   flightFilterModel,
   flightBookingModel,
-  flightBookingPaymentModel
+  flightBookingPaymentModel,
+  flightRating
 } = require('../models/Flight');
 const { getAirlineById } = require('../models/Airline');
 const { getCountryModel } = require('../models/Country');
@@ -73,6 +74,8 @@ const getDetailFlightsInformation = async (req, res) => {
   try {
     const { id } = req.params;
     const getData = await getDetailFlightInformation(id);
+    const getAllRating = await flightRating();
+    const ratingData = getAllRating?.rows?.filter(item => item?.destinationid === Number(id));
 
     const detailFlightData = getData?.rows?.map((item) => ({
       flight_id: item?.flight_id,
@@ -84,6 +87,7 @@ const getDetailFlightsInformation = async (req, res) => {
       destination_city: item?.destination_city,
       destination_country: item?.destination_country,
       destination_image: item?.destination_image,
+      rating: Number(ratingData?.[0]?.rating).toFixed(1),
       terminal: item?.terminal,
       gate: item?.gate,
       price: item?.price,
@@ -96,7 +100,7 @@ const getDetailFlightsInformation = async (req, res) => {
       luggage: item?.luggage,
       airline_id: item?.airline_id,
       airline_name: item?.airline_name,
-      aieline_logo: item?.airline_logo,
+      airline_logo: item?.airline_logo,
       airline_pic: item?.airline_pic,
       airline_pic_phone_number: item?.airline_pic_phone_number
     }));
@@ -374,6 +378,28 @@ const flightBooking = async (req, res) => {
   res.status(200).send({ message: 'Booking Success' });
 };
 
+const trendingDestination = async (req, res) => {
+  const getRatingResponse = await flightRating();
+  const ratingData = getRatingResponse?.rows;
+  const trendingDestination = ratingData?.map(item => ({
+    destinationId: item?.destinationid,
+    city: item?.city,
+    country: item?.country,
+    country_img_url: item?.country_img_url,
+    rating: Number(item?.rating).toFixed(1)
+  }));
+
+  const topTenTrending = ratingData?.map(item => ({
+    destinationId: item?.destinationid,
+    city: item?.city,
+    country: item?.country,
+    country_img_url: item?.country_img_url,
+    rating: Number(item?.rating).toFixed(1)
+  })).splice(0, 10);
+
+  res.status(200).send({ topTenTrending, trendingDestination });
+};
+
 module.exports = {
   getAllFlights,
   getFlightsInformationById,
@@ -382,5 +408,6 @@ module.exports = {
   editFlightsInformation,
   deletedFlightInformation,
   searchFilterFlight,
-  flightBooking
+  flightBooking,
+  trendingDestination
 };

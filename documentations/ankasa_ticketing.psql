@@ -212,7 +212,7 @@ ALTER SEQUENCE public.flight_countries_id_seq OWNED BY public.flight_countries.i
 
 CREATE TABLE public.flights (
     id integer NOT NULL,
-    airline_id integer NOT NULL,
+    airline_id integer,
     original integer,
     destination integer,
     gate character varying,
@@ -377,6 +377,8 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 --
 
 COPY public.airlines (id, airline_name, airline_logo, airline_pic, airline_pic_phone_number, airline_status, airline_logo_id) FROM stdin;
+3	Air Asia	\N	Mark	081297915965	active	\N
+4	Delta Airlines	\N	Zuck	081297915961	active	\N
 \.
 
 
@@ -393,6 +395,17 @@ COPY public.booking_tickets (id, booking_id, passenger_name, nationality) FROM s
 --
 
 COPY public.bookings (id, user_id, flight_id, booking_status, booking_date, total_child_passenger, total_adult_passenger, flight_class, total_price, rating, payment_token, payment_url, payment_id) FROM stdin;
+5	1	3	waiting	2022-08-27 19:34:10.525+07	1	1	economy	5625000	3	\N	\N	\N
+6	1	3	waiting	2022-08-27 19:34:42.122+07	1	1	economy	5625000	4	0f6e8343-67db-4e0b-9eea-5f8a264f4b99	https://app.sandbox.midtrans.com/snap/v3/redirection/0f6e8343-67db-4e0b-9eea-5f8a264f4b99	d71a7880-21a9-4477-ae30-f8894dd2e5ad
+7	1	5	waiting	2022-08-27 20:32:43.279+07	1	1	economy	5625000	4	309a9a1c-ccec-4e9b-a93e-10df50dc6810	https://app.sandbox.midtrans.com/snap/v3/redirection/309a9a1c-ccec-4e9b-a93e-10df50dc6810	11f0d8cb-f815-4778-856c-11bc75d20b94
+8	1	6	waiting	2022-08-27 20:32:46.336+07	1	1	economy	5625000	5	198a8e72-2ed6-41ba-986a-68c4d9569fd3	https://app.sandbox.midtrans.com/snap/v3/redirection/198a8e72-2ed6-41ba-986a-68c4d9569fd3	734fa832-4cd2-42dd-987d-5a44f4e15a47
+9	1	6	waiting	2022-08-27 20:32:49.276+07	1	1	economy	5625000	5	1facf37d-c634-4273-abc2-d573a388a836	https://app.sandbox.midtrans.com/snap/v3/redirection/1facf37d-c634-4273-abc2-d573a388a836	4e0904ad-b967-4462-a717-95722dd0f396
+10	1	6	waiting	2022-08-27 20:32:50.117+07	1	1	economy	5625000	4	f49d4ff5-5a6f-411f-8066-75c2f96ac55e	https://app.sandbox.midtrans.com/snap/v3/redirection/f49d4ff5-5a6f-411f-8066-75c2f96ac55e	6e86c308-b5c1-44d0-9408-de44260708d5
+11	1	7	waiting	2022-08-27 20:32:53.128+07	1	1	economy	5625000	4	98cd0b43-ee13-4375-b1dc-083b349b651e	https://app.sandbox.midtrans.com/snap/v3/redirection/98cd0b43-ee13-4375-b1dc-083b349b651e	769b459d-924b-4900-ad62-2e664962da38
+1	1	1	waiting	2022-08-27 19:28:37.526+07	1	1	economy	5625000	5	ecdd04a3-672c-4e8e-9fbf-47341a2b2daa	https://app.sandbox.midtrans.com/snap/v3/redirection/ecdd04a3-672c-4e8e-9fbf-47341a2b2daa	bd3b436d-afe9-46b0-afc5-c888b1d221a7
+2	1	2	waiting	2022-08-27 19:28:51.633+07	1	1	economy	5625000	5	5d9b292d-5be7-434e-a75d-d98e209ef7e3	https://app.sandbox.midtrans.com/snap/v3/redirection/5d9b292d-5be7-434e-a75d-d98e209ef7e3	04ff5c78-8e74-4c52-81ce-316b507c7364
+3	1	2	waiting	2022-08-27 19:28:54.652+07	1	1	economy	5625000	4	c454888d-3937-4a72-87d7-6ec1941ffac6	https://app.sandbox.midtrans.com/snap/v3/redirection/c454888d-3937-4a72-87d7-6ec1941ffac6	0f6c285e-0590-4fe0-8294-4be239d2971c
+4	1	3	waiting	2022-08-27 19:28:57.068+07	1	1	economy	5625000	3	e87a6bf2-1f5a-4819-a62c-e584ff71205d	https://app.sandbox.midtrans.com/snap/v3/redirection/e87a6bf2-1f5a-4819-a62c-e584ff71205d	c6bc8a53-98d5-4a47-ba41-495894992edc
 \.
 
 
@@ -401,6 +414,13 @@ COPY public.bookings (id, user_id, flight_id, booking_status, booking_date, tota
 --
 
 COPY public.flight_countries (id, city, country, country_img_url, country_img_url_id) FROM stdin;
+1	Bali	Indonesia	\N	\N
+2	Bandung	Indonesia	\N	\N
+3	Jakarta	Indonesia	\N	\N
+4	Surabaya	Indonesia	\N	\N
+5	New York City	USA	\N	\N
+6	Los Angeles	USA	\N	\N
+7	Georgia	USA	\N	\N
 \.
 
 
@@ -409,6 +429,12 @@ COPY public.flight_countries (id, city, country, country_img_url, country_img_ur
 --
 
 COPY public.flights (id, airline_id, original, destination, gate, price, total_child_ticket, total_adult_ticket, departure_time, arrival_time, wifi, meal, luggage, terminal) FROM stdin;
+1	3	1	5	A	7500000	50	100	2022-08-24 00:00:00+07	2022-08-25 05:00:00+07	f	t	t	01
+2	3	2	6	A	7500000	50	100	2022-08-24 00:00:00+07	2022-08-25 05:00:00+07	f	t	t	01
+3	4	3	7	A	7500000	50	100	2022-08-24 00:00:00+07	2022-08-25 05:00:00+07	f	t	t	01
+5	4	5	1	A	7500000	50	100	2022-08-24 00:00:00+07	2022-08-25 05:00:00+07	f	t	t	01
+6	4	5	2	A	7500000	50	100	2022-08-24 00:00:00+07	2022-08-25 05:00:00+07	f	t	t	01
+7	4	5	3	A	7500000	50	100	2022-08-24 00:00:00+07	2022-08-25 05:00:00+07	f	t	t	01
 \.
 
 
@@ -417,6 +443,7 @@ COPY public.flights (id, airline_id, original, destination, gate, price, total_c
 --
 
 COPY public.user_profiles (user_id, city, country, post_code, profile_picture, profile_picture_id) FROM stdin;
+1	\N	\N	\N	\N	\N
 \.
 
 
@@ -425,6 +452,7 @@ COPY public.user_profiles (user_id, city, country, post_code, profile_picture, p
 --
 
 COPY public.users (id, name, email, password, phone_number, role, room, reset_password) FROM stdin;
+1	Acong	acong@gmail.com	$2b$10$P.eQAb5JTbHNpXT6It1idOLqvv2BbgvdFyGfM/YCMBK9zVzL7ULkS	\N	customer	\N	\N
 \.
 
 
@@ -432,28 +460,28 @@ COPY public.users (id, name, email, password, phone_number, role, room, reset_pa
 -- Name: airlines_id_seq; Type: SEQUENCE SET; Schema: public; Owner: nocturndev
 --
 
-SELECT pg_catalog.setval('public.airlines_id_seq', 1, false);
+SELECT pg_catalog.setval('public.airlines_id_seq', 4, true);
 
 
 --
 -- Name: bookings_id_seq; Type: SEQUENCE SET; Schema: public; Owner: nocturndev
 --
 
-SELECT pg_catalog.setval('public.bookings_id_seq', 1, false);
+SELECT pg_catalog.setval('public.bookings_id_seq', 11, true);
 
 
 --
 -- Name: flight_countries_id_seq; Type: SEQUENCE SET; Schema: public; Owner: nocturndev
 --
 
-SELECT pg_catalog.setval('public.flight_countries_id_seq', 1, false);
+SELECT pg_catalog.setval('public.flight_countries_id_seq', 7, true);
 
 
 --
 -- Name: flights_id_seq; Type: SEQUENCE SET; Schema: public; Owner: nocturndev
 --
 
-SELECT pg_catalog.setval('public.flights_id_seq', 1, false);
+SELECT pg_catalog.setval('public.flights_id_seq', 7, true);
 
 
 --
@@ -467,7 +495,7 @@ SELECT pg_catalog.setval('public.tickets_id_seq', 1, false);
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: nocturndev
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 1, false);
+SELECT pg_catalog.setval('public.users_id_seq', 1, true);
 
 
 --
@@ -563,7 +591,7 @@ ALTER TABLE ONLY public.users
 --
 
 ALTER TABLE ONLY public.flights
-    ADD CONSTRAINT fk_airline_id FOREIGN KEY (airline_id) REFERENCES public.airlines(id);
+    ADD CONSTRAINT fk_airline_id FOREIGN KEY (airline_id) REFERENCES public.airlines(id) ON DELETE SET NULL;
 
 
 --
@@ -579,7 +607,7 @@ ALTER TABLE ONLY public.booking_tickets
 --
 
 ALTER TABLE ONLY public.flights
-    ADD CONSTRAINT fk_destination FOREIGN KEY (destination) REFERENCES public.flight_countries(id);
+    ADD CONSTRAINT fk_destination FOREIGN KEY (destination) REFERENCES public.flight_countries(id) ON DELETE SET NULL;
 
 
 --
@@ -595,7 +623,7 @@ ALTER TABLE ONLY public.bookings
 --
 
 ALTER TABLE ONLY public.flights
-    ADD CONSTRAINT fk_original FOREIGN KEY (original) REFERENCES public.flight_countries(id);
+    ADD CONSTRAINT fk_original FOREIGN KEY (original) REFERENCES public.flight_countries(id) ON DELETE SET NULL;
 
 
 --

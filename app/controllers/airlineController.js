@@ -25,13 +25,16 @@ const getAirline = async (req, res) => {
 
 const createAirlines = async (req, res) => {
   try {
-    const pathImage = req.file.path;
-    const pictureData = await cloudinary.uploader.upload(pathImage, {
-      folder: 'Airlines'
-    });
+    const pathImage = req?.file?.path;
+    let pictureData;
+    if (pathImage) {
+      pictureData = await cloudinary.uploader.upload(pathImage, {
+        folder: 'Airlines'
+      });
+    }
     await createAirline({
       ...req.body,
-      airline_logo: pictureData.secure_url
+      airline_logo: pictureData?.secure_url
     });
     res.status(200).send('Success create airline');
   } catch (error) {

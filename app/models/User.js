@@ -53,7 +53,8 @@ const getAllBookingsModel = (requestData) => {
     FROM bookings
     JOIN flights ON bookings.flight_id = flights.id
     JOIN airlines ON flights.airline_id = airlines.id
-     WHERE bookings.user_id=$1`,
+    WHERE bookings.user_id=$1
+    ORDER BY bookings.id DESC`,
     [requestData?.userId],
     (error, result) => {
       if (error) return reject(error);
@@ -72,8 +73,8 @@ const getDetailBookingModel = (requestData) => {
     FROM bookings
     JOIN flights ON bookings.flight_id = flights.id
     JOIN airlines ON flights.airline_id = airlines.id
-     WHERE bookings.id=$1
-     AND bookings.user_id=$2`,
+    WHERE bookings.id=$1
+    AND bookings.user_id=$2`,
     [requestData?.bookingId, requestData?.userId],
     (error, result) => {
       if (error) return reject(error);
