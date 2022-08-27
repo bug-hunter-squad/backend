@@ -111,22 +111,22 @@
 									"formdata": [
 										{
 											"key": "airline_name",
-											"value": "Air Asia",
+											"value": "Delta Airlines",
 											"type": "text"
 										},
 										{
 											"key": "airline_logo",
 											"type": "file",
-											"src": "/D:/Kevin/Kerja/Pijar Camp/Course/Hardskills/Project/Ankasa Ticketing/documentations/images/AirAsia_New_Logo.png"
+											"src": []
 										},
 										{
 											"key": "airline_pic",
-											"value": "Mark",
+											"value": "Zuck",
 											"type": "text"
 										},
 										{
 											"key": "airline_pic_phone_number",
-											"value": "081297915965",
+											"value": "081297915961",
 											"type": "text"
 										},
 										{
@@ -242,7 +242,7 @@
 									"variable": [
 										{
 											"key": "airlinesId",
-											"value": "8"
+											"value": "1"
 										}
 									]
 								}
@@ -264,12 +264,12 @@
 									"urlencoded": [
 										{
 											"key": "airline_id",
-											"value": "1",
+											"value": "4",
 											"type": "text"
 										},
 										{
 											"key": "originalId",
-											"value": "1",
+											"value": "5",
 											"type": "text"
 										},
 										{
@@ -354,7 +354,7 @@
 									"urlencoded": [
 										{
 											"key": "airline_id",
-											"value": "1",
+											"value": "4",
 											"type": "text"
 										},
 										{
@@ -434,7 +434,7 @@
 									"variable": [
 										{
 											"key": "flightId",
-											"value": "1"
+											"value": "4"
 										}
 									]
 								}
@@ -458,7 +458,7 @@
 									"variable": [
 										{
 											"key": "flightId",
-											"value": "17"
+											"value": "4"
 										}
 									]
 								}
@@ -471,7 +471,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseURL}}/flight?originalId=4&destinationId=2&departureDate=2022-08-28&childPassenger=1&adultPassenger=1",
+									"raw": "{{baseURL}}/flight?originalId=4&destinationId=2",
 									"host": [
 										"{{baseURL}}"
 									],
@@ -492,7 +492,8 @@
 										{
 											"key": "departureDate",
 											"value": "2022-08-28",
-											"description": "'YYYY-MM-dd'"
+											"description": "'YYYY-MM-dd'",
+											"disabled": true
 										},
 										{
 											"key": "departureTime",
@@ -508,11 +509,13 @@
 										},
 										{
 											"key": "childPassenger",
-											"value": "1"
+											"value": "1",
+											"disabled": true
 										},
 										{
 											"key": "adultPassenger",
-											"value": "1"
+											"value": "1",
+											"disabled": true
 										},
 										{
 											"key": "wifi",
@@ -576,8 +579,26 @@
 									"variable": [
 										{
 											"key": "id",
-											"value": "1"
+											"value": "2"
 										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Trending Destination",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/flight/trending",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"flight",
+										"trending"
 									]
 								}
 							},
@@ -598,7 +619,7 @@
 									"formdata": [
 										{
 											"key": "city",
-											"value": "New York City",
+											"value": "Georgia",
 											"type": "text"
 										},
 										{
@@ -652,18 +673,18 @@
 									"formdata": [
 										{
 											"key": "city",
-											"value": "Europe",
+											"value": "NYC",
 											"type": "text"
 										},
 										{
 											"key": "country",
-											"value": "Europe",
+											"value": "USA",
 											"type": "text"
 										},
 										{
 											"key": "countryImage",
 											"type": "file",
-											"src": "/D:/Kevin/Kerja/Pijar Camp/Course/Hardskills/Project/Ankasa Ticketing/documentations/images/Air_Europa_Logo.png"
+											"src": "/D:/Kevin/Kerja/Pijar Camp/Course/Hardskills/Project/Ankasa Ticketing/documentations/images/Countries/NYC.jpg"
 										}
 									]
 								},
@@ -679,7 +700,7 @@
 									"variable": [
 										{
 											"key": "countryId",
-											"value": "7"
+											"value": "3"
 										}
 									]
 								}
@@ -703,7 +724,7 @@
 									"variable": [
 										{
 											"key": "countryId",
-											"value": "7"
+											"value": "2"
 										}
 									]
 								}
@@ -720,85 +741,6 @@
 				{
 					"name": "Booking",
 					"item": [
-						{
-							"name": "Tickets",
-							"item": [
-								{
-									"name": "Passenger Tickets",
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "urlencoded",
-											"urlencoded": [
-												{
-													"key": "title",
-													"value": "",
-													"type": "text"
-												},
-												{
-													"key": "passengerName",
-													"value": "",
-													"type": "text"
-												},
-												{
-													"key": "nationalty",
-													"value": "",
-													"type": "text"
-												}
-											]
-										},
-										"url": {
-											"raw": "https://localhost:8500/booking/:bookingId/tickets",
-											"protocol": "https",
-											"host": [
-												"localhost"
-											],
-											"port": "8500",
-											"path": [
-												"booking",
-												":bookingId",
-												"tickets"
-											],
-											"variable": [
-												{
-													"key": "bookingId",
-													"value": null
-												}
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Get Tickets",
-									"request": {
-										"method": "GET",
-										"header": [],
-										"url": {
-											"raw": "https://localhost:8500/booking/:bookingId/tickets",
-											"protocol": "https",
-											"host": [
-												"localhost"
-											],
-											"port": "8500",
-											"path": [
-												"booking",
-												":bookingId",
-												"tickets"
-											],
-											"variable": [
-												{
-													"key": "bookingId",
-													"value": null
-												}
-											]
-										}
-									},
-									"response": []
-								}
-							]
-						},
 						{
 							"name": "My Review",
 							"item": [
@@ -832,11 +774,11 @@
 											"variable": [
 												{
 													"key": "userId",
-													"value": "9"
+													"value": "1"
 												},
 												{
 													"key": "bookingId",
-													"value": "32"
+													"value": "11"
 												}
 											]
 										}
@@ -888,7 +830,7 @@
 									"variable": [
 										{
 											"key": "userId",
-											"value": "2"
+											"value": "1"
 										}
 									]
 								}
@@ -914,7 +856,7 @@
 									"variable": [
 										{
 											"key": "userId",
-											"value": "2"
+											"value": "1"
 										},
 										{
 											"key": "bookingId",
@@ -971,11 +913,11 @@
 									"variable": [
 										{
 											"key": "flightId",
-											"value": "1"
+											"value": "7"
 										},
 										{
 											"key": "userId",
-											"value": "2"
+											"value": "1"
 										}
 									]
 								}
