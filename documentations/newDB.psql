@@ -1,0 +1,622 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 14.4
+-- Dumped by pg_dump version 14.4
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: airline_status; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public.airline_status AS ENUM (
+    'active',
+    'deactive'
+);
+
+
+ALTER TYPE public.airline_status OWNER TO postgres;
+
+--
+-- Name: booking_status; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public.booking_status AS ENUM (
+    'paid',
+    'waiting',
+    'issued',
+    'canceled'
+);
+
+
+ALTER TYPE public.booking_status OWNER TO postgres;
+
+--
+-- Name: flight_class; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public.flight_class AS ENUM (
+    'economy',
+    'business',
+    'first class'
+);
+
+
+ALTER TYPE public.flight_class OWNER TO postgres;
+
+--
+-- Name: role; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public.role AS ENUM (
+    'admin',
+    'customer'
+);
+
+
+ALTER TYPE public.role OWNER TO postgres;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: airlines; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.airlines (
+    id integer NOT NULL,
+    airline_name character varying NOT NULL,
+    airline_logo text,
+    airline_pic character varying NOT NULL,
+    airline_pic_phone_number character varying(15),
+    airline_status public.airline_status NOT NULL,
+    airline_logo_id text
+);
+
+
+ALTER TABLE public.airlines OWNER TO postgres;
+
+--
+-- Name: airlines_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.airlines_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.airlines_id_seq OWNER TO postgres;
+
+--
+-- Name: airlines_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.airlines_id_seq OWNED BY public.airlines.id;
+
+
+--
+-- Name: booking_tickets; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.booking_tickets (
+    id integer NOT NULL,
+    booking_id integer NOT NULL,
+    passenger_name character varying,
+    nationality character varying
+);
+
+
+ALTER TABLE public.booking_tickets OWNER TO postgres;
+
+--
+-- Name: bookings; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.bookings (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    flight_id integer NOT NULL,
+    booking_status public.booking_status NOT NULL,
+    booking_date timestamp with time zone,
+    total_child_passenger integer,
+    total_adult_passenger integer,
+    flight_class public.flight_class NOT NULL,
+    total_price integer,
+    rating integer,
+    payment_token text,
+    payment_url text,
+    payment_id text
+);
+
+
+ALTER TABLE public.bookings OWNER TO postgres;
+
+--
+-- Name: bookings_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.bookings_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.bookings_id_seq OWNER TO postgres;
+
+--
+-- Name: bookings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.bookings_id_seq OWNED BY public.bookings.id;
+
+
+--
+-- Name: flight_countries; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.flight_countries (
+    id integer NOT NULL,
+    city character varying,
+    country character varying,
+    country_img_url text,
+    country_img_url_id text
+);
+
+
+ALTER TABLE public.flight_countries OWNER TO postgres;
+
+--
+-- Name: flight_countries_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.flight_countries_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.flight_countries_id_seq OWNER TO postgres;
+
+--
+-- Name: flight_countries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.flight_countries_id_seq OWNED BY public.flight_countries.id;
+
+
+--
+-- Name: flights; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.flights (
+    id integer NOT NULL,
+    airline_id integer,
+    original integer,
+    destination integer,
+    gate character varying,
+    price integer,
+    total_child_ticket integer,
+    total_adult_ticket integer,
+    departure_time timestamp with time zone,
+    arrival_time timestamp with time zone,
+    wifi boolean NOT NULL,
+    meal boolean NOT NULL,
+    luggage boolean NOT NULL,
+    terminal character varying
+);
+
+
+ALTER TABLE public.flights OWNER TO postgres;
+
+--
+-- Name: flights_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.flights_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.flights_id_seq OWNER TO postgres;
+
+--
+-- Name: flights_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.flights_id_seq OWNED BY public.flights.id;
+
+
+--
+-- Name: tickets_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.tickets_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tickets_id_seq OWNER TO postgres;
+
+--
+-- Name: tickets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.tickets_id_seq OWNED BY public.booking_tickets.id;
+
+
+--
+-- Name: user_profiles; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.user_profiles (
+    user_id integer NOT NULL,
+    city character varying,
+    country character varying,
+    post_code character varying,
+    profile_picture text,
+    profile_picture_id text
+);
+
+
+ALTER TABLE public.user_profiles OWNER TO postgres;
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.users (
+    id integer NOT NULL,
+    name character varying NOT NULL,
+    email character varying NOT NULL,
+    password character varying NOT NULL,
+    phone_number character varying(15),
+    role public.role NOT NULL,
+    room text,
+    reset_password text
+);
+
+
+ALTER TABLE public.users OWNER TO postgres;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.users_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_id_seq OWNER TO postgres;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
+-- Name: airlines id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.airlines ALTER COLUMN id SET DEFAULT nextval('public.airlines_id_seq'::regclass);
+
+
+--
+-- Name: booking_tickets id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.booking_tickets ALTER COLUMN id SET DEFAULT nextval('public.tickets_id_seq'::regclass);
+
+
+--
+-- Name: bookings id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.bookings ALTER COLUMN id SET DEFAULT nextval('public.bookings_id_seq'::regclass);
+
+
+--
+-- Name: flight_countries id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.flight_countries ALTER COLUMN id SET DEFAULT nextval('public.flight_countries_id_seq'::regclass);
+
+
+--
+-- Name: flights id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.flights ALTER COLUMN id SET DEFAULT nextval('public.flights_id_seq'::regclass);
+
+
+--
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Data for Name: airlines; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.airlines (id, airline_name, airline_logo, airline_pic, airline_pic_phone_number, airline_status, airline_logo_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: booking_tickets; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.booking_tickets (id, booking_id, passenger_name, nationality) FROM stdin;
+\.
+
+
+--
+-- Data for Name: bookings; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.bookings (id, user_id, flight_id, booking_status, booking_date, total_child_passenger, total_adult_passenger, flight_class, total_price, rating, payment_token, payment_url, payment_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: flight_countries; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.flight_countries (id, city, country, country_img_url, country_img_url_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: flights; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.flights (id, airline_id, original, destination, gate, price, total_child_ticket, total_adult_ticket, departure_time, arrival_time, wifi, meal, luggage, terminal) FROM stdin;
+\.
+
+
+--
+-- Data for Name: user_profiles; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.user_profiles (user_id, city, country, post_code, profile_picture, profile_picture_id) FROM stdin;
+1	\N	\N	\N	\N	\N
+\.
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.users (id, name, email, password, phone_number, role, room, reset_password) FROM stdin;
+1	Nanang komarudin	nanangkomarudin2015@gmail.com	$2b$10$5joIWNfkaWzJOwQNSsbGaeeYtTlb37KiVV2j8Xi9N2RFzjklJKeJa	\N	admin	\N	\N
+\.
+
+
+--
+-- Name: airlines_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.airlines_id_seq', 7, true);
+
+
+--
+-- Name: bookings_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.bookings_id_seq', 1, false);
+
+
+--
+-- Name: flight_countries_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.flight_countries_id_seq', 28, true);
+
+
+--
+-- Name: flights_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.flights_id_seq', 4, true);
+
+
+--
+-- Name: tickets_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.tickets_id_seq', 1, false);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.users_id_seq', 1, true);
+
+
+--
+-- Name: airlines airlines_airline_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.airlines
+    ADD CONSTRAINT airlines_airline_name_key UNIQUE (airline_name);
+
+
+--
+-- Name: airlines airlines_airline_pic_phone_number_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.airlines
+    ADD CONSTRAINT airlines_airline_pic_phone_number_key UNIQUE (airline_pic_phone_number);
+
+
+--
+-- Name: airlines airlines_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.airlines
+    ADD CONSTRAINT airlines_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: bookings bookings_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.bookings
+    ADD CONSTRAINT bookings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: flight_countries flight_countries_city_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.flight_countries
+    ADD CONSTRAINT flight_countries_city_key UNIQUE (city);
+
+
+--
+-- Name: flight_countries flight_countries_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.flight_countries
+    ADD CONSTRAINT flight_countries_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: flights flights_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.flights
+    ADD CONSTRAINT flights_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: booking_tickets tickets_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.booking_tickets
+    ADD CONSTRAINT tickets_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users users_email_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_email_key UNIQUE (email);
+
+
+--
+-- Name: users users_phone_number_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_phone_number_key UNIQUE (phone_number);
+
+
+--
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: flights fk_airline_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.flights
+    ADD CONSTRAINT fk_airline_id FOREIGN KEY (airline_id) REFERENCES public.airlines(id) ON DELETE SET NULL;
+
+
+--
+-- Name: booking_tickets fk_booking_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.booking_tickets
+    ADD CONSTRAINT fk_booking_id FOREIGN KEY (booking_id) REFERENCES public.bookings(id);
+
+
+--
+-- Name: flights fk_destination; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.flights
+    ADD CONSTRAINT fk_destination FOREIGN KEY (destination) REFERENCES public.flight_countries(id) ON DELETE SET NULL;
+
+
+--
+-- Name: bookings fk_flight_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.bookings
+    ADD CONSTRAINT fk_flight_id FOREIGN KEY (flight_id) REFERENCES public.flights(id);
+
+
+--
+-- Name: flights fk_original; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.flights
+    ADD CONSTRAINT fk_original FOREIGN KEY (original) REFERENCES public.flight_countries(id) ON DELETE SET NULL;
+
+
+--
+-- Name: user_profiles fk_user_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_profiles
+    ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: bookings fk_user_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.bookings
+    ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+

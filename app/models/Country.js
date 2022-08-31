@@ -22,6 +22,9 @@ const getCountriesModel = async () => {
   });
 };
 
+
+
+
 const getCountryModel = async (requestData) => {
   return new Promise((resolve, reject) => {
     db.query('SELECT * from flight_countries where id=$1',

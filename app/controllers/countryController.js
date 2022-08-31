@@ -33,6 +33,12 @@ const getCountries = async (req, res) => {
   res.status(200).send(getCountriesResponse?.rows);
 };
 
+const getCountriesById = async (req, res) =>{
+  const { countryId } = req?.params;
+  const dataCountry = await getCountryModel({ countryId });
+  res.send(dataCountry?.rows?.[0]);
+}
+
 const editCountry = async (req, res) => {
   const { city, country } = req?.body;
   const { countryId } = req?.params;
@@ -73,4 +79,4 @@ const deleteCountry = async (req, res) => {
 
   res.status(200).send({ message: 'Country has been deleted!' });
 };
-module.exports = { addCountry, getCountries, editCountry, deleteCountry };
+module.exports = { addCountry, getCountries, editCountry, deleteCountry, getCountriesById };

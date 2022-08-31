@@ -67,7 +67,7 @@ const getAllBookingsModel = (requestData) => {
 const getDetailBookingModel = (requestData) => {
   return new Promise((resolve, reject) => {
     db.query(`SELECT bookings.*, 
-    flights.original, flights.destination, flights.terminal, flights.gate, flights.departure_time, flights.arrival_time, 
+    flights.original, flights.destination, flights.terminal, flights.gate, flights.departure_time, flights.arrival_time,
     airlines.airline_name, airlines.airline_logo, airlines.airline_pic, airlines.airline_pic_phone_number,
     to_timestamp(EXTRACT(EPOCH FROM flights.arrival_time) - EXTRACT(EPOCH FROM flights.departure_time)) as flight_time
     FROM bookings
