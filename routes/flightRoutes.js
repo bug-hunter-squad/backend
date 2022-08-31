@@ -8,6 +8,7 @@ const {
   getDetailFlightsInformation,
   searchFilterFlight,
   flightBooking,
+  getAllFlights,
   trendingDestination
 } = require('../app/controllers/flightController');
 
@@ -16,9 +17,11 @@ flightRoutes.get('/trending', asyncHandler(trendingDestination));
 flightRoutes.post('/', urlencoded, createFlightsInformation)
   .get('/', asyncHandler(searchFilterFlight));
 
+flightRoutes.get('/all', asyncHandler(getAllFlights));
+
 flightRoutes.patch('/:flightId', urlencoded, editFlightsInformation)
   .delete('/:flightId', deletedFlightInformation)
-  .get('/:id', getDetailFlightsInformation); ;
+  .get('/:id', getDetailFlightsInformation);
 
 flightRoutes.post('/:flightId/booking/profile/:userId', urlencoded, asyncHandler(flightBooking));
 
