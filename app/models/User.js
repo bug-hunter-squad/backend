@@ -84,6 +84,17 @@ const getDetailBookingModel = (requestData) => {
   });
 };
 
+const getBookingByPaymentIdModel = (requestData) => {
+  return new Promise((resolve, reject) => {
+    db.query('SELECT * FROM bookings where payment_id = $1',
+      [requestData?.orderId],
+      (error, result) => {
+        if (error) return reject(error);
+        resolve(result);
+      });
+  });
+};
+
 const rateFlightModel = (requestData) => {
   return new Promise((resolve, reject) => {
     db.query('UPDATE bookings SET rating=$1 WHERE id=$2 AND user_id=$3',
@@ -122,5 +133,6 @@ module.exports = {
   getAllBookingsModel,
   getDetailBookingModel,
   rateFlightModel,
-  getFlightReviewsModel
+  getFlightReviewsModel,
+  getBookingByPaymentIdModel
 };

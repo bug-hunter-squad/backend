@@ -75,7 +75,7 @@ const getDetailFlightsInformation = async (req, res) => {
     const { id } = req.params;
     const getData = await getDetailFlightInformation(id);
     const getAllRating = await flightRating();
-    const ratingData = getAllRating?.rows?.filter(item => item?.destinationid === Number(id));
+    const ratingData = getAllRating?.rows?.filter(item => item?.destinationid === Number(getData?.rows?.[0]?.destination));
 
     const detailFlightData = getData?.rows?.map((item) => ({
       flight_id: item?.flight_id,

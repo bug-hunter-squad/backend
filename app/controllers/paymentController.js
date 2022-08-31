@@ -1,4 +1,5 @@
 const { flightBookingStatusModel } = require('../models/Flight');
+const { getBookingByPaymentIdModel } = require('../models/User');
 
 const notifications = async (req, res) => {
   const { transaction_status: transactionStatus, order_id: orderId } = req?.body;
@@ -9,6 +10,9 @@ const notifications = async (req, res) => {
 
   if (transactionStatus === 'settlement') {
     await flightBookingStatusModel({ inputStatus: 'paid', orderId });
+    const getFlightId = await getBookingByPaymentIdModel({ orderId });
+    const flightData = getFlightId?.rows?.[0];
+    console.log('flightData', flightData);
   }
 
   if (transactionStatus === 'cancel') {

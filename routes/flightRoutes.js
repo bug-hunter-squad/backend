@@ -18,7 +18,7 @@ flightRoutes.post('/', urlencoded, createFlightsInformation)
 
 flightRoutes.patch('/:flightId', urlencoded, editFlightsInformation)
   .delete('/:flightId', deletedFlightInformation)
-  .get('/:id', getDetailFlightsInformation); ;
+  .get('/:id', getDetailFlightsInformation);
 
 flightRoutes.post('/:flightId/booking/profile/:userId', urlencoded, asyncHandler(flightBooking));
 
