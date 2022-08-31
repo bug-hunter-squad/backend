@@ -22,10 +22,46 @@ const { getCountryModel } = require('../models/Country');
 const getAllFlights = async (req, res) => {
   try {
     const getData = await getFlightsInformation();
+    const flightData = getData?.rows;
+
+    flightData?.map(item => {
+      if (item.flight_time) item.flight_time = flightTimeConverter(item?.flight_time);
+      if (item.departure_time) item.departure_time = timestampConverter(item?.departure_time);
+      if (item.arrival_time) item.arrival_time = timestampConverter(item?.arrival_time);
+      return item;
+    });
+
+    const flightInformation = flightData?.map(item => ({
+      flightId: item?.flight_id,
+      flightOriginalId: item?.original,
+      flightOriginalCity: item?.original_city,
+      flightOriginalCountry: item?.original_country,
+      flightOriginalImage: item?.original_image,
+      flightDestinationId: item?.destination,
+      flightDestinationCity: item?.destination_city,
+      flightDestinationCountry: item?.destination_country,
+      flightDestinationImage: item?.destination_image,
+      flightTerminal: item?.terminal,
+      flightGate: item?.gate,
+      flightDeparture: item?.departure_time,
+      flightArrival: item?.arrival_time,
+      flightTime: item?.flight_time,
+      totalChildTicket: item?.total_child_ticket,
+      totalAdultTicket: item?.total_adult_ticket,
+      wifi: item?.wifi,
+      meal: item?.meal,
+      luggage: item?.luggage,
+      flightPrice: item?.price,
+      airlineId: item?.airline_id,
+      airlineName: item?.airline_name,
+      airlineLogo: item?.airline_logo,
+      airlinePIC: item?.airline_pic,
+      airlinePICPhone: item?.airline_pic_phone_number
+    }));
 
     res.status(200).send({
-      data: getData.rows,
-      jumlahData: getData.rowCount
+      jumlahData: getData.rowCount,
+      data: flightInformation
     });
   } catch (error) {
     console.log('error', error);

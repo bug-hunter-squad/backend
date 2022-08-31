@@ -5,10 +5,13 @@ const getFlightsInformation = () => {
   return new Promise((resolve, reject) => {
     db.query(`SELECT flights.*, 
     original.city as original_city, original.country as original_country,
-    destination.city as destination_city, destination.country as destination_country
+    destination.city as destination_city, destination.country as destination_country,
+    airline.id as airline_id, airline.airline_name, airline.airline_pic, airline.airline_pic_phone_number, airline.airline_status,
+    to_timestamp(EXTRACT(EPOCH FROM flights.arrival_time) - EXTRACT(EPOCH FROM flights.departure_time)) as flight_time
     FROM flights 
     JOIN flight_countries AS original ON flights.original = original.id
     JOIN flight_countries AS destination ON flights.destination = destination.id
+    JOIN airlines as airline ON flights.airline_id = airline.id
     ORDER BY flights.id DESC`, (error, result) => {
       if (error) {
         reject(error);
