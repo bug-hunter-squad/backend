@@ -3,7 +3,13 @@ const { ErrorResponse } = require('../../utils/errorResponse');
 
 const getFlightsInformation = () => {
   return new Promise((resolve, reject) => {
-    db.query('SELECT * FROM flights ORDER BY id ASC', (error, result) => {
+    db.query(`SELECT flights.*, 
+    original.city as original_city, original.country as original_country,
+    destination.city as destination_city, destination.country as destination_country
+    FROM flights 
+    JOIN flight_countries AS original ON flights.original = original.id
+    JOIN flight_countries AS destination ON flights.destination = destination.id
+    ORDER BY flights.id DESC`, (error, result) => {
       if (error) {
         reject(error);
       } else {
