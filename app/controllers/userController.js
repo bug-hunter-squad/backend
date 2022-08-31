@@ -66,6 +66,7 @@ const getBookings = async (req, res) => {
 
   const getBookingsResponse = await getAllBookingsModel({ userId, currentDate });
   let bookingsData = getBookingsResponse?.rows;
+  console.log('bookingsData', bookingsData);
 
   bookingsData = bookingsData?.filter(item => {
     if (currentDate > item?.arrival_time && item?.booking_status !== 'paid') return item;
@@ -84,6 +85,12 @@ const getBookings = async (req, res) => {
     bookingId: item?.id,
     userId: item?.user_id,
     flightId: item?.flight_id,
+    originalId: item?.original,
+    originalCity: item?.original_city,
+    originalCountry: item?.original_country,
+    destinationId: item?.destination,
+    destinationCity: item?.destination_city,
+    destinationCountry: item?.destination_country,
     bookingStatus: item?.booking_status,
     bookingDate: item?.booking_date,
     totalChildPassenger: item?.total_child_passenger,
