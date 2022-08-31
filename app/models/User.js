@@ -113,12 +113,16 @@ const rateFlightModel = (requestData) => {
 const getFlightReviewsModel = (requestData) => {
   return new Promise((resolve, reject) => {
     db.query(`SELECT bookings.*, 
-    flights.original, flights.destination, flights.terminal, flights.gate, flights.departure_time, flights.arrival_time, 
+    flights.original, original.city as original_city, original.country as original_country ,
+    flights.destination, destination.city as destination_city, destination.country as destination_country, 
+    flights.terminal, flights.gate, flights.departure_time, flights.arrival_time, 
     airlines.airline_name, airlines.airline_logo, airlines.airline_pic, airlines.airline_pic_phone_number,
     to_timestamp(EXTRACT(EPOCH FROM flights.arrival_time) - EXTRACT(EPOCH FROM flights.departure_time)) as flight_time
     FROM bookings
     JOIN flights ON bookings.flight_id = flights.id
     JOIN airlines ON flights.airline_id = airlines.id
+    JOIN flight_countries as original ON flights.original = original.id
+    JOIN flight_countries as destination ON flights.destination = destination.id
      WHERE user_id=$1 
      AND bookings.booking_status='paid' 
      AND flights.arrival_time < $2`,
