@@ -143,7 +143,7 @@ const flightFilterModel = (requestData) => {
     AND (flights.total_adult_ticket >= $4 )
     AND (flights.luggage=$5 OR flights.meal=$6 OR flights.wifi=$7)
     ${conditionalPrice}
-    ORDER BY flights.id`,
+    ORDER BY flights.id DESC`,
     [
       requestData?.originalId,
       requestData?.destinationId,
@@ -227,6 +227,16 @@ const flightRating = (requestData) => {
   });
 };
 
+const flightTicketCalculation = (requestData) => {
+  return new Promise((resolve, reject) => {
+    db.query('UPDATE flights set total_child_ticket=total_child_ticket-$1, total_adult_ticket=total_adult_ticket-$2 where id=$3',
+      [requestData?.totalChildTicket, requestData?.totalAdultTicket, requestData?.flightId],
+      (error, result) => {
+        if (error) return reject(error);
+        resolve(result);
+      });
+  });
+};
 module.exports = {
   getFlightsInformation,
   getFlightInformationById,
@@ -239,5 +249,6 @@ module.exports = {
   flightBookingModel,
   flightBookingPaymentModel,
   flightBookingStatusModel,
+  flightTicketCalculation,
   flightRating
 };
