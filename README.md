@@ -17,7 +17,8 @@
 <li>Search for tickets based on several categories (Original, Destination, Departure time, Arrival time, Ticket prices and facilities</li>
 <li>You can login multi-role admin or user</li>
 <li>async handler middleware that will help your error handling</li>
-<li>etc</li>
+<li>Can make payments</li>
+  <li>etc.</li>
 </ul>
 
 <h3 id=built>Made With</h3>
